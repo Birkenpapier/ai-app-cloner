@@ -1,0 +1,66 @@
+{
+  "name": "ExampleNotes",
+  "source": { "mode": "screenshots", "ref": "docs/screenshots/" },
+  "tokens": {
+    "colors": {
+      "background": "#ffffff",
+      "foreground": "#0a0a0a",
+      "primary": "#208aef",
+      "primary-foreground": "#ffffff",
+      "muted": "#f4f4f5",
+      "muted-foreground": "#71717a",
+      "border": "#e4e4e7",
+      "dark-background": "#0a0a0a",
+      "dark-foreground": "#fafafa"
+    },
+    "fonts": { "sans": "Inter", "mono": "Menlo" },
+    "spacing": { "screenX": 16, "gap": 12 },
+    "radii": { "card": 16, "button": 10 }
+  },
+  "navigation": {
+    "type": "tabs",
+    "items": ["Home", "Search", "Profile"]
+  },
+  "screens": [
+    {
+      "name": "Home",
+      "route": "/",
+      "states": ["default", "empty", "loading", "dark"],
+      "sourceShots": ["home-filled.png", "home-empty.png", "home-loading.png", "home-dark.png"],
+      "transitionsTo": ["NoteDetail"],
+      "spec": "docs/research/components/home.spec.md"
+    },
+    {
+      "name": "Search",
+      "route": "/search",
+      "states": ["default", "results"],
+      "sourceShots": ["search-empty.png", "search-results.png"],
+      "transitionsTo": ["NoteDetail"],
+      "spec": "docs/research/components/search.spec.md"
+    },
+    {
+      "name": "Profile",
+      "route": "/profile",
+      "states": ["default", "dark"],
+      "sourceShots": ["profile.png", "profile-dark.png"],
+      "transitionsTo": ["Settings"],
+      "spec": "docs/research/components/profile.spec.md"
+    },
+    {
+      "name": "NoteDetail",
+      "route": "/note/[id]",
+      "states": ["default"],
+      "sourceShots": ["note-detail.png"],
+      "transitionsTo": [],
+      "spec": "docs/research/components/note-detail.spec.md"
+    },
+    {
+      "name": "Settings",
+      "route": "/settings",
+      "states": ["default"],
+      "sourceShots": ["settings.png"],
+      "transitionsTo": [],
+      "spec": "docs/research/components/settings.spec.md"
+    }
+  ]
+}

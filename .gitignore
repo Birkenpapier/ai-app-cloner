@@ -41,3 +41,15 @@ example
 # generated native folders
 /ios
 /android
+
+# clone-app working artifacts — keep the READMEs/.gitkeep, ignore captured images
+docs/screenshots/*
+!docs/screenshots/README.md
+docs/design-references/*
+!docs/design-references/.gitkeep
+
+# diff-loop render output (generated)
+docs/diff/
+
+# internal launch planning (not for public template)
+LAUNCH_PLAN.md

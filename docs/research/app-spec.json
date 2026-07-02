@@ -1,0 +1,94 @@
+{
+  "name": "Passwords",
+  "source": { "mode": "screenshots", "ref": "docs/screenshots/" },
+  "tokens": {
+    "colors": {
+      "background": "#f2f2f7",
+      "surface": "#ffffff",
+      "foreground": "#000000",
+      "secondary": "#8e8e93",
+      "tertiary": "#c7c7cc",
+      "blue": "#007aff",
+      "search": "#e3e3e9",
+      "separator": "#c6c6c8",
+      "cat-all": "#007aff",
+      "cat-passkeys": "#34c759",
+      "cat-codes": "#ffcc00",
+      "cat-security": "#8e8e93",
+      "cat-deleted": "#ff9500"
+    },
+    "fonts": { "sans": "System (SF Pro)", "mono": "Menlo" },
+    "spacing": { "screenX": 16, "cardGap": 12 },
+    "radii": { "card": 16, "cell": 10, "search": 10 }
+  },
+  "navigation": {
+    "type": "stack",
+    "items": ["Passwords"]
+  },
+  "screens": [
+    {
+      "name": "Passwords",
+      "route": "/",
+      "states": ["default"],
+      "sourceShots": ["shot-01.png"],
+      "transitionsTo": ["All", "Passkeys", "Codes", "Security", "Deleted", "NewPassword"],
+      "spec": "docs/screenshots/shot-01.png"
+    },
+    {
+      "name": "All",
+      "route": "/all",
+      "states": ["empty"],
+      "sourceShots": ["shot-02.png"],
+      "transitionsTo": [],
+      "spec": "docs/screenshots/shot-02.png"
+    },
+    {
+      "name": "Passkeys",
+      "route": "/passkeys",
+      "states": ["empty"],
+      "sourceShots": ["shot-03.png"],
+      "transitionsTo": ["AboutPasskeys"],
+      "spec": "docs/screenshots/shot-03.png"
+    },
+    {
+      "name": "Codes",
+      "route": "/codes",
+      "states": ["empty"],
+      "sourceShots": ["shot-04.png"],
+      "transitionsTo": [],
+      "spec": "docs/screenshots/shot-04.png"
+    },
+    {
+      "name": "Security",
+      "route": "/security",
+      "states": ["empty"],
+      "sourceShots": ["shot-05.png"],
+      "transitionsTo": [],
+      "spec": "docs/screenshots/shot-05.png"
+    },
+    {
+      "name": "Deleted",
+      "route": "/deleted",
+      "states": ["empty"],
+      "sourceShots": ["shot-06.png"],
+      "transitionsTo": [],
+      "spec": "docs/screenshots/shot-06.png"
+    },
+    {
+      "name": "NewPassword",
+      "route": "/new-password",
+      "states": ["default"],
+      "sourceShots": ["shot-07.png"],
+      "transitionsTo": [],
+      "spec": "docs/screenshots/shot-07.png"
+    },
+    {
+      "name": "AboutPasskeys",
+      "route": "/about-passkeys",
+      "states": ["default"],
+      "sourceShots": ["shot-08.png"],
+      "transitionsTo": [],
+      "spec": "docs/screenshots/shot-08.png"
+    }
+  ]
+}

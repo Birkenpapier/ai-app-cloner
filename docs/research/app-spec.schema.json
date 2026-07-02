@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/dioptify/ai-app-cloner/app-spec.schema.json",
+  "title": "ai-app-cloner app spec (IR)",
+  "description": "Platform-agnostic intermediate representation produced by the clone-app recon phases. Captures design tokens, the navigation graph, and per-screen structure. v1 codegen reads this to emit Expo/React Native; future native targets (v2) read the same file.",
+  "type": "object",
+  "required": ["name", "tokens", "navigation", "screens"],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string", "description": "Name of the cloned app." },
+    "source": {
+      "type": "object",
+      "description": "Where the clone came from.",
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "type": "string", "enum": ["screenshots", "web"] },
+        "ref": { "type": "string", "description": "Screenshots dir or URL." }
+      }
+    },
+    "tokens": {
+      "type": "object",
+      "description": "Design tokens. Written into tailwind.config.js + src/lib/tokens.ts.",
+      "additionalProperties": false,
+      "properties": {
+        "colors": {
+          "type": "object",
+          "description": "Semantic color names → hex/rgb. Include a dark variant set if the app has dark mode.",
+          "additionalProperties": { "type": "string" }
+        },
+        "fonts": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Roles (sans/mono/display) → font family names."
+        },
+        "spacing": {
+          "type": "object",
+          "additionalProperties": { "type": ["number", "string"] }
+        },
+        "radii": {
+          "type": "object",
+          "additionalProperties": { "type": ["number", "string"] }
+        }
+      }
+    },
+    "navigation": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["tabs", "stack", "drawer", "mixed"],
+          "description": "Top-level navigation container, inferred from chrome (persistent bottom bar = tabs, back chevron = stack)."
+        },
+        "items": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "For tabs/drawer: the screen names that are top-level destinations, in order."
+        }
+      }
+    },
+    "screens": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/screen" }
+    }
+  },
+  "definitions": {
+    "screen": {
+      "type": "object",
+      "required": ["name", "route"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "Canonical screen name, e.g. \"Home\"." },
+        "route": { "type": "string", "description": "Expo Router path, e.g. \"/\" or \"/profile\"." },
+        "states": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "States this screen has, e.g. [\"default\",\"empty\",\"loading\",\"dark\",\"modal\"]."
+        },
+        "sourceShots": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Screenshot filenames backing this screen (one or more per state)."
+        },
+        "transitionsTo": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Names of screens reachable from this one (the graph edges)."
+        },
+        "spec": {
+          "type": "string",
+          "description": "Path to the screen's spec file, e.g. docs/research/components/home.spec.md."
+        }
+      }
+    }
+  }
+}

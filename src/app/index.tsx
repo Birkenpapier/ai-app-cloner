@@ -1,98 +1,47 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
+import { Check, Clock, Fingerprint, KeyRound, Plus, Trash2 } from 'lucide-react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { CategoryCard } from '@/components/CategoryCard';
+import { LargeTitleHeader } from '@/components/LargeTitleHeader';
+import { SearchBar } from '@/components/SearchBar';
+import { tokens } from '@/lib/tokens';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+// Passwords home (shot-01): large title, search bar, 2-column grid of category
+// cards, and a blue + that opens the New Password modal.
+export default function PasswordsHome() {
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+      <ScrollView>
+        <LargeTitleHeader title="Passwords" />
+        <View className="mt-2 px-4">
+          <SearchBar />
+        </View>
+
+        <View className="mt-3 gap-3 px-4">
+          <View className="flex-row gap-3">
+            <CategoryCard icon={KeyRound} color={tokens.colors.category.all} label="All" count={0} href="/all" />
+            <CategoryCard icon={Fingerprint} color={tokens.colors.category.passkeys} label="Passkeys" count={0} href="/passkeys" />
+          </View>
+          <View className="flex-row gap-3">
+            <CategoryCard icon={Clock} color={tokens.colors.category.codes} label="Codes" count={0} href="/codes" />
+            <CategoryCard icon={Check} color={tokens.colors.category.security} label="Security" count={0} href="/security" />
+          </View>
+          <View className="flex-row gap-3">
+            <CategoryCard icon={Trash2} color={tokens.colors.category.deleted} label="Deleted" count={0} href="/deleted" />
+            <View className="flex-1" />
+          </View>
+        </View>
+      </ScrollView>
+
+      <Pressable
+        onPress={() => router.push('/new-password')}
+        className="absolute bottom-4 right-5 h-11 w-11 items-center justify-center"
+        accessibilityLabel="Add password"
+      >
+        <Plus size={32} color={tokens.colors.blue} strokeWidth={2.5} />
+      </Pressable>
+    </SafeAreaView>
   );
 }
-
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});
