@@ -1,31 +1,18 @@
-// ────────────────────────────────────────────────────────────────────────────
-// Runtime design tokens. The `/clone-app` foundation phase OVERWRITES these with
-// the cloned app's real values (extracted from screenshots, or from the DOM in
-// web mode). Prefer NativeWind classes (see tailwind.config.js) for styling;
-// reach for these only where a `className` can't — e.g. a color passed to a
-// native prop, the StatusBar, or navigation theming.
-// ────────────────────────────────────────────────────────────────────────────
+// Runtime design tokens — cloned from Todoist (iOS, dark theme) via /clone-app.
 export const tokens = {
   colors: {
-    background: '#ffffff',
-    foreground: '#0a0a0a',
-    primary: '#208aef',
-    primaryForeground: '#ffffff',
-    muted: '#f4f4f5',
-    mutedForeground: '#71717a',
-    border: '#e4e4e7',
-    accent: '#f4f4f5',
+    background: '#1e1e1e',
+    surface: '#282828',
+    surface2: '#363636',
+    foreground: '#ffffff',
+    secondary: '#a0a0a0',
+    tertiary: '#6b6b6b',
+    separator: '#3a3a3a',
+    red: '#dc4c3e', // Todoist brand accent
   },
-  fonts: {
-    sans: 'System',
-    mono: 'Menlo',
-  },
-  radii: {
-    card: 16,
-  },
-  spacing: {
-    screenX: 24,
-  },
+  fonts: { sans: 'System', mono: 'Menlo' },
+  radii: { card: 12, pill: 999 },
+  spacing: { screenX: 16 },
 } as const;
 
 export type Tokens = typeof tokens;

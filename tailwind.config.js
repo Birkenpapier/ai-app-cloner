@@ -1,30 +1,22 @@
 /** @type {import('tailwindcss').Config} */
-// ────────────────────────────────────────────────────────────────────────────
-// DESIGN TOKENS — the `/clone-app` foundation phase OVERWRITES the values below
-// with the cloned app's real palette/typography/spacing. This file is the home
-// for the cloned app's design system (the analog of a web project's globals.css
-// `:root` block). Keep the shape; replace the values.
-//
-// Note: these are flat token colors (e.g. `bg-background`, `text-primary`), not
-// Tailwind's numbered scales — `bg-blue-500` etc. are intentionally not defined.
-// ────────────────────────────────────────────────────────────────────────────
+// DESIGN TOKENS — cloned from Todoist (iOS, dark theme) via /clone-app.
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
       colors: {
-        background: '#ffffff',
-        foreground: '#0a0a0a',
-        primary: '#208aef',
-        'primary-foreground': '#ffffff',
-        muted: '#f4f4f5',
-        'muted-foreground': '#71717a',
-        border: '#e4e4e7',
-        accent: '#f4f4f5',
+        background: '#1e1e1e',
+        surface: '#282828',
+        surface2: '#363636',
+        foreground: '#ffffff',
+        secondary: '#a0a0a0',
+        tertiary: '#6b6b6b',
+        separator: '#3a3a3a',
+        red: '#dc4c3e',
       },
       borderRadius: {
-        card: '16px',
+        card: '12px',
       },
       fontFamily: {
         sans: ['System'],
