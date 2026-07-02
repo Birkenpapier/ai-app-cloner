@@ -88,7 +88,7 @@ Assets are baked into the screenshot's pixels. You cannot extract a crisp logo S
 
 Group the inventory into a `{screen → [states]}` map. Two screenshots are the **same screen, different state** if they share layout skeleton, navigation chrome, and header — differing only in content (empty vs. filled), theme (light vs. dark), or an overlay (modal/sheet open). They are **different screens** if the structure or the active nav target differs.
 
-For each screen, record: its canonical name, the list of states with the screenshot backing each, and which state is the "default" (what you'll build first). Honor filename conventions if the user provided them. Save to `docs/research/SCREENS.md`.
+For each screen, record: its canonical name, the list of states with the screenshot backing each, and which state is the "default" (what you'll build first). Honor filename conventions if the user provided them. Record this in `docs/research/SCREEN_GRAPH.md` (alongside the navigation map from Phase 3).
 
 ## Phase 3: Infer the Navigation Graph
 
