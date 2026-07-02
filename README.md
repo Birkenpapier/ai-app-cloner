@@ -104,6 +104,18 @@ prototyping. Don't pass off a clone of someone else's app as your own product, a
 respect trademarks, app-store rules, and the original's terms. You are responsible
 for what you build with this.
 
+Cloning reproduces **function and layout**, not brand assets: icons are re-created
+(not copied), and the tool never redistributes an app's original image/logo files.
+Reproducing a specific commercial app's distinctive look pixel-for-pixel can raise
+copyright ("look and feel"), trade-dress, and design-patent issues — clone
+responsibly, and get legal advice before publishing a clone of a named product.
+
+## Disclaimer
+
+This project and its demos are for **educational and demonstration purposes**. It is
+**not affiliated with, endorsed by, or sponsored by** any app or company shown. All
+product names, logos, and trademarks are the property of their respective owners.
+
 ## License
 
 MIT — see [LICENSE](LICENSE). A product of [dioptify](https://github.com/dioptify) / Birkenpapier.
