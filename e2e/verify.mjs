@@ -37,18 +37,32 @@ if (!base) {
   const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
   server = http.createServer((req, res) => {
     const url = decodeURIComponent(req.url.split('?')[0]);
-    let file = path.join(DIST, url);
-    if (url === '/' || !path.extname(url) || !fs.existsSync(file)) file = path.join(DIST, 'index.html');
+    // Resolve within DIST and reject anything that escapes it (path traversal).
+    const resolved = path.resolve(DIST, '.' + url);
+    const inside = resolved === DIST || resolved.startsWith(DIST + path.sep);
+    let file = resolved;
+    // SPA fallback: root, extensionless routes, escapes, or misses -> index.html.
+    if (url === '/' || !path.extname(url) || !inside || !fs.existsSync(file)) file = path.join(DIST, 'index.html');
     res.writeHead(200, { 'content-type': TYPES[path.extname(file)] || 'application/octet-stream' });
     fs.createReadStream(file).pipe(res);
   });
-  await new Promise((r) => server.listen(0, r));
-  base = `http://localhost:${server.address().port}`;
+  // Bind to loopback only so the dev machine's files aren't served to the LAN.
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+  base = `http://127.0.0.1:${server.address().port}`;
 }
 
 const errors = [];
 let where = 'init';
-const browser = await chromium.launch();
+let browser;
+try {
+  browser = await chromium.launch();
+} catch (e) {
+  console.error('\nCould not launch Chromium for verification.');
+  console.error('If this is a fresh clone, install the browser once with:\n  npx playwright install chromium\n');
+  console.error(String(e?.message || e));
+  if (server) server.close();
+  process.exit(2);
+}
 const page = await browser.newPage({ viewport: { width: 402, height: 874 }, deviceScaleFactor: 2 });
 page.on('pageerror', (e) => errors.push(`[${where}] pageerror: ${e.message}`));
 page.on('console', (m) => {
