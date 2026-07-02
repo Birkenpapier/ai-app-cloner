@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useCallback, useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 // ────────────────────────────────────────────────────────────────────────────
 // On-device persistence for cloned apps.
@@ -11,6 +11,12 @@ import { useCallback, useEffect, useState } from 'react';
 //
 // Backed by AsyncStorage (which is localStorage on web), so persistence works
 // offline and survives reloads — including in the web build used for demos.
+//
+// Each `key` maps to ONE shared store, so adding on one screen instantly shows
+// up on every other screen reading the same key. A per-component useState would
+// give each screen its own private copy — the classic "add a task, it doesn't
+// appear in the list" bug. We use useSyncExternalStore over a module-level store
+// to get real cross-screen reactivity.
 // ────────────────────────────────────────────────────────────────────────────
 
 export async function readCollection<T>(key: string): Promise<T[]> {
@@ -22,47 +28,81 @@ export async function writeCollection<T>(key: string, items: T[]): Promise<void>
   await AsyncStorage.setItem(key, JSON.stringify(items));
 }
 
+type WithId = { id: string };
+
+class Collection<T extends WithId> {
+  items: T[];
+  ready = false;
+  private listeners = new Set<() => void>();
+
+  constructor(
+    private readonly key: string,
+    seed: T[],
+  ) {
+    this.items = seed;
+    // Hydrate once from storage without blocking render. On web, AsyncStorage is
+    // localStorage; guard SSR/prerender where `window` is absent.
+    if (typeof window !== 'undefined') {
+      void readCollection<T>(this.key).then((stored) => {
+        if (stored.length) this.items = stored;
+        this.ready = true;
+        this.emit();
+      });
+    } else {
+      this.ready = true;
+    }
+  }
+
+  subscribe = (cb: () => void): (() => void) => {
+    this.listeners.add(cb);
+    return () => {
+      this.listeners.delete(cb);
+    };
+  };
+
+  getSnapshot = (): T[] => this.items;
+
+  private emit() {
+    for (const l of this.listeners) l();
+  }
+
+  // Functional updates read `this.items` at call time (not a captured closure),
+  // so rapid successive writes never drop each other.
+  private commit(next: T[]) {
+    this.items = next;
+    void writeCollection(this.key, next);
+    this.emit();
+  }
+
+  add = (item: T) => this.commit([...this.items, item]);
+  update = (id: string, patch: Partial<T>) =>
+    this.commit(this.items.map((i) => (i.id === id ? { ...i, ...patch } : i)));
+  remove = (id: string) => this.commit(this.items.filter((i) => i.id !== id));
+}
+
+const collections = new Map<string, Collection<WithId>>();
+
+function getCollection<T extends WithId>(key: string, seed: T[]): Collection<T> {
+  let c = collections.get(key);
+  if (!c) {
+    c = new Collection<T>(key, seed) as unknown as Collection<WithId>;
+    collections.set(key, c);
+  }
+  return c as unknown as Collection<T>;
+}
+
 /**
- * A persisted array with CRUD, as a React hook. Items must carry a string `id`.
- * `seed` is used only on first run when nothing is stored yet.
+ * A persisted array with CRUD, shared across every screen that uses the same
+ * `key`. Items must carry a string `id`. `seed` is used only the first time a
+ * given key is initialized (nothing stored yet).
  *
  *   const { items, add, update, remove } = useCollection<Task>('tasks');
- *   add({ id: makeId(), title: 'Buy milk', done: false }); // saves on-device
+ *   add({ id: makeId(), title: 'Buy milk', done: false }); // saves + syncs everywhere
  */
 export function useCollection<T extends { id: string }>(key: string, seed: T[] = []) {
-  const [items, setItems] = useState<T[]>(seed);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    readCollection<T>(key).then((stored) => {
-      if (!active) return;
-      setItems(stored.length ? stored : seed);
-      setReady(true);
-    });
-    return () => {
-      active = false;
-    };
-    // seed is intentionally read once on mount
-  }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const persist = useCallback(
-    (next: T[]) => {
-      setItems(next);
-      void writeCollection(key, next);
-    },
-    [key],
-  );
-
-  const add = useCallback((item: T) => persist([...items, item]), [items, persist]);
-  const update = useCallback(
-    (id: string, patch: Partial<T>) =>
-      persist(items.map((i) => (i.id === id ? { ...i, ...patch } : i))),
-    [items, persist],
-  );
-  const remove = useCallback((id: string) => persist(items.filter((i) => i.id !== id)), [items, persist]);
-
-  return { items, ready, add, update, remove };
+  const store = getCollection<T>(key, seed);
+  const items = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
+  return { items, ready: store.ready, add: store.add, update: store.update, remove: store.remove };
 }
 
 /** Small id helper for locally-created records (no crypto dependency). */
