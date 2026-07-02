@@ -8,7 +8,11 @@ import { tokens } from '@/lib/tokens';
 export function TaskRow({ task }: { task: Task }) {
   return (
     <View className="flex-row items-center gap-3 border-b border-separator py-3">
-      <Pressable onPress={() => toggleTask(task.id)} hitSlop={8}>
+      <Pressable
+        onPress={() => toggleTask(task.id)}
+        hitSlop={8}
+        accessibilityLabel={`Toggle ${task.title}`}
+      >
         {task.done ? (
           <View className="h-[22px] w-[22px] items-center justify-center rounded-full bg-red">
             <Check size={14} color="#ffffff" strokeWidth={3} />

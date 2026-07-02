@@ -161,7 +161,12 @@ confirm they actually work and persist. Any runtime error is a FAILURE even if t
 screenshot looks perfect — do not rely on the screenshot alone. Automate this
 (e.g. Playwright collecting `page.on('pageerror')` and `page.on('console')`), and
 test the **dev server**, not just the production export (some errors only surface
-in one). Only once the app runs clean do you compare pixels:
+in one). The template ships this as **`npm run verify`** (`e2e/verify.mjs`): declare
+the cloned app's routes and feature flows in `e2e/flows.mjs`, then run it — it loads
+every route, fails on any `pageerror`/`console.error`, runs each flow, and
+screenshots every screen to `e2e/shots/`. **Update `e2e/flows.mjs` for every clone
+and get `npm run verify` to ✅ ALL PASS before declaring done.** Only once the app
+runs clean do you compare pixels:
 
 For every screen, after it's built and merged, run the loop:
 
