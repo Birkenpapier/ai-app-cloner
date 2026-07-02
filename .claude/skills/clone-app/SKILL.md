@@ -78,6 +78,16 @@ Every builder verifies `npx tsc --noEmit` before finishing. After each merge you
 ### 10. Be Honest About What You Can't Recover
 Assets are baked into the screenshot's pixels. You cannot extract a crisp logo SVG or icon file from a raster screenshot — you re-create icons with a vector icon library (lucide-react-native, already idiomatic) matched by eye, or crop the raster as a last resort. App icons, custom illustrations, and photos are approximated or cropped. **Say this in the spec and the final report.** (Web mode recovers real asset files from the DOM — use them.)
 
+### 11. Triage Data Operations — Implement the On-Device Ones For Real
+A clone that can't *do* anything is a dead shell. Not every action needs a backend. For every data action the app performs, classify it:
+
+- **Backend** (server auth, sync, real-time feeds, remote search, payments) → you can't clone it → mock it with typed stubs and a `// TODO: wire backend`.
+- **On-device** (local CRUD, drafts, toggles, settings, reordering, a local list the user builds) → **implement it for real** with on-device storage so the clone actually works offline.
+
+Use the ready-made helper `src/lib/store.ts` (`useCollection<T>(key, seed)` → persisted `items` + `add`/`update`/`remove`, backed by AsyncStorage, which also persists on web). Example: a to-do app's "add task", "check off", "delete", and "reorder" are all on-device — build them so tapping **+** genuinely saves and survives a reload. Its "sync across devices" or "log in" is backend — stub it.
+
+In the completion report, state exactly which actions are **real (on-device)** vs **mocked (backend)**. This honesty is also the differentiator: the clone runs.
+
 ## Phase 1: Ingest & Inventory
 
 **Screenshot mode:** Read every screenshot in the directory (they are images — view them). Build an inventory table: filename, what screen it appears to be, what state it shows, and any obvious navigation chrome (tab bar, header, back button). Save to `docs/research/INVENTORY.md`.
@@ -118,6 +128,7 @@ For the screen and each of its states, read the screenshot carefully and extract
 - **Components** — each distinct UI element: type (button, card, list row, avatar, input, chip), its text, its styling (color, size, weight, radius, border, shadow) to the precision you can judge. Mark estimates as estimates.
 - **Per-state deltas** — for each non-default state, what changes vs. the default (e.g., "loading: list replaced by 6 skeleton rows"; "dark: bg #0a0a0a, text #fafafa").
 - **Assets** — which images/icons appear; for each, decide: lucide icon match, re-create, or crop raster. Note the decision.
+- **Data actions** — for every interactive action on the screen (add, edit, delete, toggle, reorder, search), triage it **backend** (mock) vs **on-device** (implement for real via `src/lib/store.ts`). See Principle 11.
 - **Verbatim text** — every visible string.
 
 ### Step 2: Write the spec file

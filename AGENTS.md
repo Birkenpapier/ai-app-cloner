@@ -38,6 +38,7 @@ Builder agents working in worktrees must type-check before reporting done.
 | `src/app/` | screens (Expo Router routes) |
 | `src/components/` , `src/components/ui/` | reusable components the cloner generates |
 | `src/lib/tokens.ts` | runtime design tokens |
+| `src/lib/store.ts` | on-device persistence (`useCollection`) for real local features |
 | `tailwind.config.js` | design-token classes |
 | `docs/screenshots/` | input: screenshots of the app to clone |
 | `docs/research/` | recon output: `app-spec.json`, screen graph, per-screen specs |
