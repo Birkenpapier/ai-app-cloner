@@ -1,31 +1,27 @@
-// ────────────────────────────────────────────────────────────────────────────
-// Runtime design tokens. The `/clone-app` foundation phase OVERWRITES these with
-// the cloned app's real values (extracted from screenshots, or from the DOM in
-// web mode). Prefer NativeWind classes (see tailwind.config.js) for styling;
-// reach for these only where a `className` can't — e.g. a color passed to a
-// native prop, the StatusBar, or navigation theming.
-// ────────────────────────────────────────────────────────────────────────────
+// Runtime design tokens — cloned from Google Keep (iOS, dark theme) via /clone-app.
 export const tokens = {
   colors: {
-    background: '#ffffff',
-    foreground: '#0a0a0a',
-    primary: '#208aef',
-    primaryForeground: '#ffffff',
-    muted: '#f4f4f5',
-    mutedForeground: '#71717a',
-    border: '#e4e4e7',
-    accent: '#f4f4f5',
+    background: '#202124',
+    surface: '#2d2e30',
+    search: '#35363a',
+    foreground: '#e8eaed',
+    secondary: '#9aa0a6',
+    border: '#5f6368',
+    blue: '#8ab4f8',
+    // Note background colors (Keep dark-mode palette).
+    note: {
+      default: '#2d2e30',
+      teal: '#16504b',
+      olive: '#635d19',
+      brown: '#614a19',
+      green: '#345920',
+      blue: '#2d555e',
+      pink: '#5b2245',
+    },
   },
-  fonts: {
-    sans: 'System',
-    mono: 'Menlo',
-  },
-  radii: {
-    card: 16,
-  },
-  spacing: {
-    screenX: 24,
-  },
+  fonts: { sans: 'System', mono: 'Menlo' },
+  radii: { card: 8, search: 28 },
+  spacing: { screenX: 12 },
 } as const;
 
 export type Tokens = typeof tokens;
