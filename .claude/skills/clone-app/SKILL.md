@@ -153,6 +153,21 @@ As builders finish: merge their worktree branch, run `npm run web` to confirm it
 
 ## Phase 6: Visual-Diff Loop (the engine)
 
+**Functional gate first — a screenshot proves it *rendered*, not that it *runs*.**
+Before (and during) the visual diff, drive the app in the browser and **capture the
+console**: load every route and assert **zero** `pageerror` / `console.error`, then
+exercise the on-device actions (add / edit / delete / toggle) and a **reload** to
+confirm they actually work and persist. Any runtime error is a FAILURE even if the
+screenshot looks perfect — do not rely on the screenshot alone. Automate this
+(e.g. Playwright collecting `page.on('pageerror')` and `page.on('console')`), and
+test the **dev server**, not just the production export (some errors only surface
+in one). The template ships this as **`npm run verify`** (`e2e/verify.mjs`): declare
+the cloned app's routes and feature flows in `e2e/flows.mjs`, then run it — it loads
+every route, fails on any `pageerror`/`console.error`, runs each flow, and
+screenshots every screen to `e2e/shots/`. **Update `e2e/flows.mjs` for every clone
+and get `npm run verify` to ✅ ALL PASS before declaring done.** Only once the app
+runs clean do you compare pixels:
+
 For every screen, after it's built and merged, run the loop:
 
 1. **Render** the screen in the running Expo web app at the device viewport (e.g. 390px wide). Navigate to its route.

@@ -11,6 +11,9 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
+  // NativeWind's web runtime manages color scheme via a class observer; without
+  // this it throws "Cannot manually set color scheme, as dark mode is type 'media'".
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
