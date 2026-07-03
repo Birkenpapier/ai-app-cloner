@@ -4,6 +4,11 @@
 
 ### Give it screenshots of an app. Get a React Native app back.
 
+[![License](https://img.shields.io/github/license/Birkenpapier/ai-app-cloner?color=blue)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/Birkenpapier/ai-app-cloner?style=flat&color=yellow)](https://github.com/Birkenpapier/ai-app-cloner/stargazers)
+![Expo SDK 56](https://img.shields.io/badge/Expo-SDK%2056-000020?logo=expo&logoColor=white)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com/Birkenpapier/ai-app-cloner/issues)
+
 You point your coding agent at a folder of screenshots. It works out the screens,
 the navigation, and the design system, then writes a runnable Expo / React Native
 project that reproduces them.
