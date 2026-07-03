@@ -1,0 +1,3 @@
+This project uses AGENTS.md as the single source of truth for all AI agent instructions.
+Windsurf reads AGENTS.md automatically — see the project root for the complete guidelines.
+The /clone-app workflow lives in .windsurf/workflows/clone-app.md.

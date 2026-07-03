@@ -62,6 +62,33 @@ Then, inside your coding agent (Claude Code is the reference setup):
 Want to see a finished result first? Each `demo/*` branch holds a complete clone:
 `git checkout demo/todoist` (or `demo/keep`, `demo/spendee`).
 
+## Works in these agents
+
+The `/clone-app` skill is generated for every major AI coding agent from one source
+of truth (`.claude/skills/clone-app/SKILL.md` for the command, `AGENTS.md` for the
+project rules). After editing the source, run `node scripts/sync-skills.mjs` and
+`bash scripts/sync-agent-rules.sh` to regenerate the per-agent files.
+
+| Agent | How it runs |
+| --- | --- |
+| Claude Code | `/clone-app` (reference implementation) |
+| Codex CLI | `/clone-app` |
+| Cursor | `/clone-app` command |
+| Windsurf | `/clone-app` workflow |
+| Gemini CLI | `/clone-app` |
+| GitHub Copilot | `.github/` skill + instructions |
+| Cline | reads `.clinerules` |
+| Roo Code | reads `AGENTS.md` |
+| Continue | `/clone-app` command |
+| OpenCode | `/clone-app` |
+| Amazon Q | `clone-app` agent |
+| Augment Code | `/clone-app` command |
+| Aider | reads `AGENTS.md` |
+
+Claude Code is the only one verified end to end so far. The rest use each agent's
+documented config format, generated from the same source. Reports from other agents
+are welcome.
+
 ## Where the output goes
 
 The repo you clone is a blank Expo app. Running `/clone-app` fills it in:
