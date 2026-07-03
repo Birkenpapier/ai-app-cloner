@@ -45,5 +45,11 @@
     "web": "expo start --web",
     "verify": "expo export --platform web && node e2e/verify.mjs"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Birkenpapier/ai-app-cloner.git"
+  },
+  "homepage": "https://github.com/Birkenpapier/ai-app-cloner#readme",
+  "bugs": "https://github.com/Birkenpapier/ai-app-cloner/issues",
   "private": true
 }

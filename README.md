@@ -31,7 +31,7 @@ identically, because a screenshot is a screenshot.
 ## Quickstart
 
 ```bash
-git clone https://github.com/dioptify/ai-app-cloner
+git clone https://github.com/Birkenpapier/ai-app-cloner
 cd ai-app-cloner
 npm install
 npm run web        # confirm the blank canvas boots
@@ -118,4 +118,4 @@ product names, logos, and trademarks are the property of their respective owners
 
 ## License
 
-MIT — see [LICENSE](LICENSE). A product of [dioptify](https://github.com/dioptify) / Birkenpapier.
+MIT — see [LICENSE](LICENSE). A product of [Birkenpapier](https://github.com/Birkenpapier) / dioptify.
