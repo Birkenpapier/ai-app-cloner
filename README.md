@@ -8,9 +8,15 @@ Point your AI coding agent at a folder of screenshots — it figures out the
 screens, the navigation, and the design system, then rebuilds the whole app as a
 runnable **Expo / React Native** project.
 
-<!-- TODO(launch): replace with the hero GIF — a folder of screenshots on the left,
-     the running Expo clone on the right, building screen by screen. This GIF is
-     50% of the launch. Record it before posting anywhere. -->
+<p>
+  <img src="assets/demo/todoist.gif" width="220" alt="Todoist clone running natively on iOS" />
+  &nbsp;
+  <img src="assets/demo/keep.gif" width="220" alt="Google Keep clone running natively on iOS" />
+  &nbsp;
+  <img src="assets/demo/spendee.gif" width="220" alt="Spendee clone running natively on iOS" />
+</p>
+
+<sub>Three real apps, cloned from screenshots, running natively on iOS. Add an item, reopen the app, it's still there.</sub>
 
 </div>
 
