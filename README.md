@@ -45,18 +45,22 @@ doing the measuring the DOM would have handed you for free on the web.
 git clone https://github.com/Birkenpapier/ai-app-cloner
 cd ai-app-cloner
 npm install
-npm run web        # the blank template should boot in a browser tab
+npx playwright install chromium   # one-time, used by npm run verify
+npm run web                       # the blank template should boot in a browser tab
+git checkout -b my-clone          # the clone builds into this repo, so keep main pristine
 ```
 
 Then, inside your coding agent (Claude Code is the reference setup):
 
-1. Drop screenshots into `docs/screenshots/`.
-2. Run `/clone-app`.
+1. Connect a browser automation MCP (Chrome, Playwright, or Puppeteer). The diff loop
+   cannot run without it, since it is how the agent screenshots the clone while it builds.
+2. Drop screenshots into `docs/screenshots/`. See
+   [`docs/screenshots/README.md`](docs/screenshots/README.md) for what to capture and how
+   to name files so the agent can tell one screen from another.
+3. Run `/clone-app`.
 
-You also need a browser automation MCP (Chrome, Playwright, or Puppeteer) connected
-to your agent. That is what lets the diff loop screenshot the clone while it builds.
-[`docs/screenshots/README.md`](docs/screenshots/README.md) explains what to capture
-and how to name the files so the agent can tell one screen from another.
+Want to see a finished result first? Each `demo/*` branch holds a complete clone:
+`git checkout demo/todoist` (or `demo/keep`, `demo/spendee`).
 
 ## Where the output goes
 
