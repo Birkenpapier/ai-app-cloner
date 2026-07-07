@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { ChevronDown, PieChart, Plus, Search } from 'lucide-react-native';
+import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -9,19 +10,24 @@ import { tokens } from '@/lib/tokens';
 
 const money = (n: number) => `${n < 0 ? '-' : n > 0 ? '+' : ''}€${Math.abs(n).toFixed(0)}`;
 
-function Pill({ label }: { label: string }) {
+function Pill({ label, onPress }: { label: string; onPress: () => void }) {
   return (
-    <View className="flex-row items-center gap-1 rounded-full bg-surface2 px-3 py-1.5">
+    <Pressable onPress={onPress} className="flex-row items-center gap-1 rounded-full bg-surface2 px-3 py-1.5">
       <Text className="text-[13px] text-foreground">{label}</Text>
       <ChevronDown size={14} color={tokens.colors.secondary} />
-    </View>
+    </Pressable>
   );
 }
+
+const WALLET_FILTERS = ['All Wallets', 'Cash Wallet', 'Bank Account'];
+const PERIODS = ['By months', 'By weeks', 'By days'];
 
 export default function Timeline() {
   const txns = useTxns();
   const total = txns.reduce((s, t) => s + t.amount, 0);
   const barH = Math.min(Math.abs(total) / 150, 1) * 80;
+  const [walletFilter, setWalletFilter] = useState(0);
+  const [period, setPeriod] = useState(0);
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -32,12 +38,14 @@ export default function Timeline() {
           </Text>
           <Text className="text-[13px] text-secondary">Cash Flow</Text>
         </View>
-        <Search size={22} color={tokens.colors.secondary} />
+        <Pressable onPress={() => router.push('/activity')} hitSlop={8} accessibilityLabel="Search transactions">
+          <Search size={22} color={tokens.colors.secondary} />
+        </Pressable>
       </View>
 
       <View className="mt-3 flex-row justify-center gap-2">
-        <Pill label="All Wallets" />
-        <Pill label="By months" />
+        <Pill label={WALLET_FILTERS[walletFilter]} onPress={() => setWalletFilter((w) => (w + 1) % WALLET_FILTERS.length)} />
+        <Pill label={PERIODS[period]} onPress={() => setPeriod((p) => (p + 1) % PERIODS.length)} />
       </View>
 
       {/* Simple month bar chart */}
@@ -55,10 +63,14 @@ export default function Timeline() {
       </View>
 
       <View className="mt-2 flex-row justify-center">
-        <View className="flex-row items-center gap-1.5 rounded-full bg-surface2 px-4 py-2">
+        <Pressable
+          onPress={() => router.push('/budgets')}
+          className="flex-row items-center gap-1.5 rounded-full bg-surface2 px-4 py-2"
+          accessibilityLabel="Spending overview"
+        >
           <PieChart size={16} color={tokens.colors.green} />
           <Text className="text-[13px] text-foreground">Spending Overview</Text>
-        </View>
+        </Pressable>
       </View>
 
       <View className="mt-3 flex-row justify-between bg-surface px-4 py-2">

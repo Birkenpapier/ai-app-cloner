@@ -34,7 +34,10 @@ export default function Onboarding() {
           <Text className="text-[16px] font-semibold text-white">Get Started</Text>
         </Pressable>
         <Text className="mt-4 text-center text-[13px] text-secondary">
-          Have an account? <Text className="font-semibold text-foreground">Sign In</Text>
+          Have an account?{' '}
+          <Text className="font-semibold text-foreground" onPress={() => router.replace('/timeline')}>
+            Sign In
+          </Text>
         </Text>
       </SafeAreaView>
     </View>
