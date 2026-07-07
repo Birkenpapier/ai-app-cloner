@@ -7,10 +7,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { addTask } from '@/lib/tasks';
 import { tokens } from '@/lib/tokens';
 
-// Quick-add sheet. Adding a task is an ON-DEVICE op — it really saves (persists
-// via the task store) and instantly appears in the Today/Inbox lists.
+// Adding a task is an ON-DEVICE op — it saves via the task store and appears in
+// the lists. The toolbar (date / priority / reminder / label) sets the quick-add
+// options shown as chips; each control responds.
+
+const DUE = ['', 'Today', 'Tomorrow'];
+const PRIORITY = ['', 'P1', 'P2', 'P3'];
+const PRIORITY_COLOR = [tokens.colors.secondary, '#dc4c3e', '#eb8909', '#246fe0'];
+
 export default function AddTask() {
   const [title, setTitle] = useState('');
+  const [due, setDue] = useState(0);
+  const [priority, setPriority] = useState(0);
+  const [reminder, setReminder] = useState(false);
+  const [labeled, setLabeled] = useState(false);
   const canAdd = title.trim().length > 0;
 
   const submit = () => {
@@ -18,6 +28,13 @@ export default function AddTask() {
     addTask(title);
     router.back();
   };
+
+  const chips = [
+    due > 0 ? DUE[due] : null,
+    priority > 0 ? PRIORITY[priority] : null,
+    reminder ? 'Reminder' : null,
+    labeled ? 'Label' : null,
+  ].filter((c): c is string => c !== null);
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
@@ -42,15 +59,32 @@ export default function AddTask() {
           onSubmitEditing={submit}
           returnKeyType="done"
         />
+        {chips.length > 0 ? (
+          <View className="mt-3 flex-row flex-wrap gap-2">
+            {chips.map((c) => (
+              <View key={c} className="rounded-full bg-surface2 px-2.5 py-1">
+                <Text className="text-[13px] text-foreground">{c}</Text>
+              </View>
+            ))}
+          </View>
+        ) : null}
       </View>
 
       <View className="flex-1" />
 
       <View className="flex-row items-center gap-5 border-t border-separator px-4 pb-2 pt-3">
-        <CalendarDays size={22} color={tokens.colors.secondary} />
-        <Flag size={22} color={tokens.colors.secondary} />
-        <Bell size={22} color={tokens.colors.secondary} />
-        <Tag size={22} color={tokens.colors.secondary} />
+        <Pressable onPress={() => setDue((d) => (d + 1) % DUE.length)} accessibilityLabel="Set due date">
+          <CalendarDays size={22} color={due > 0 ? tokens.colors.red : tokens.colors.secondary} />
+        </Pressable>
+        <Pressable onPress={() => setPriority((p) => (p + 1) % PRIORITY.length)} accessibilityLabel="Set priority">
+          <Flag size={22} color={PRIORITY_COLOR[priority]} />
+        </Pressable>
+        <Pressable onPress={() => setReminder((r) => !r)} accessibilityLabel="Toggle reminder">
+          <Bell size={22} color={reminder ? tokens.colors.red : tokens.colors.secondary} />
+        </Pressable>
+        <Pressable onPress={() => setLabeled((l) => !l)} accessibilityLabel="Toggle label">
+          <Tag size={22} color={labeled ? tokens.colors.red : tokens.colors.secondary} />
+        </Pressable>
         <View className="flex-1" />
         <Pressable
           onPress={submit}
