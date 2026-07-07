@@ -10,7 +10,7 @@ export const flows = [
       await page.getByLabel('Add note').click();
       await wait(400);
       await page.getByPlaceholder('Title').fill('Groceries note');
-      await page.getByPlaceholder('Note').fill('Milk, eggs, bread');
+      await page.getByPlaceholder('Note', { exact: true }).fill('Milk, eggs, bread');
       await wait(150);
       await page.getByLabel('Back').click();
       await wait(500);

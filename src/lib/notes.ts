@@ -56,7 +56,7 @@ if (typeof window !== 'undefined') {
   });
 }
 
-export function addNote(title: string, body: string, color = c.default) {
+export function addNote(title: string, body: string, color: string = c.default) {
   notes = [{ id: makeId(), title: title.trim(), body: body.trim(), color }, ...notes];
   persist();
 }

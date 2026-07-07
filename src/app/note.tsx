@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Archive, Bell, ChevronLeft, MoreVertical, Palette, Pin, Plus } from 'lucide-react-native';
+import { Archive, Bell, ChevronLeft, Palette, Pin } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,27 +7,50 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { addNote } from '@/lib/notes';
 import { tokens } from '@/lib/tokens';
 
-// Note editor. Google Keep saves on back (no explicit save button) — adding a
-// note is an ON-DEVICE op, so it really persists.
+// Note editor. Keep saves on back (no explicit save button). The palette really
+// recolors the note and the color is saved; pin / reminder / archive toggle.
+const COLORS = [
+  tokens.colors.note.default,
+  tokens.colors.note.olive,
+  tokens.colors.note.teal,
+  tokens.colors.note.brown,
+];
+
 export default function NoteEditor() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [colorIdx, setColorIdx] = useState(0);
+  const [pinned, setPinned] = useState(false);
+  const [reminder, setReminder] = useState(false);
+  const [archived, setArchived] = useState(false);
+  const color = COLORS[colorIdx];
+  const isDefault = color === tokens.colors.note.default;
 
   const saveAndBack = () => {
-    if (title.trim() || body.trim()) addNote(title, body);
+    if (title.trim() || body.trim()) addNote(title, body, color);
     router.back();
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
+    <SafeAreaView
+      className="flex-1"
+      edges={['top', 'bottom']}
+      style={{ backgroundColor: isDefault ? tokens.colors.background : color }}
+    >
       <View className="h-12 flex-row items-center justify-between px-3">
         <Pressable onPress={saveAndBack} hitSlop={8} accessibilityLabel="Back">
           <ChevronLeft size={26} color={tokens.colors.foreground} />
         </Pressable>
         <View className="flex-row items-center gap-5">
-          <Pin size={20} color={tokens.colors.secondary} />
-          <Bell size={20} color={tokens.colors.secondary} />
-          <Archive size={20} color={tokens.colors.secondary} />
+          <Pressable onPress={() => setPinned((v) => !v)} hitSlop={8} accessibilityLabel="Pin note">
+            <Pin size={20} color={pinned ? tokens.colors.blue : tokens.colors.secondary} />
+          </Pressable>
+          <Pressable onPress={() => setReminder((v) => !v)} hitSlop={8} accessibilityLabel="Add reminder">
+            <Bell size={20} color={reminder ? tokens.colors.blue : tokens.colors.secondary} />
+          </Pressable>
+          <Pressable onPress={() => setArchived((v) => !v)} hitSlop={8} accessibilityLabel="Archive note">
+            <Archive size={20} color={archived ? tokens.colors.blue : tokens.colors.secondary} />
+          </Pressable>
         </View>
       </View>
 
@@ -52,10 +75,10 @@ export default function NoteEditor() {
       </ScrollView>
 
       <View className="h-12 flex-row items-center gap-5 border-t border-border px-4">
-        <Plus size={22} color={tokens.colors.secondary} />
-        <Palette size={22} color={tokens.colors.secondary} />
-        <Text className="flex-1 text-center text-[13px] text-secondary">Edited just now</Text>
-        <MoreVertical size={22} color={tokens.colors.secondary} />
+        <Pressable onPress={() => setColorIdx((i) => (i + 1) % COLORS.length)} hitSlop={8} accessibilityLabel="Change note color">
+          <Palette size={22} color={tokens.colors.secondary} />
+        </Pressable>
+        <Text className="flex-1 text-[13px] text-secondary">Edited just now</Text>
       </View>
     </SafeAreaView>
   );

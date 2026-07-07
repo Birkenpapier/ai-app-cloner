@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { CheckSquare, Image as ImageIcon, Menu, Mic, Pen, Plus, Rows2, Search, User } from 'lucide-react-native';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { type Note, useNotes } from '@/lib/notes';
@@ -21,8 +22,12 @@ function NoteCard({ note }: { note: Note }) {
 
 export default function Notes() {
   const notes = useNotes();
-  const left = notes.filter((_, i) => i % 2 === 0);
-  const right = notes.filter((_, i) => i % 2 === 1);
+  const [query, setQuery] = useState('');
+  const [cols, setCols] = useState(2);
+  const q = query.trim().toLowerCase();
+  const filtered = q ? notes.filter((n) => `${n.title} ${n.body}`.toLowerCase().includes(q)) : notes;
+  const left = filtered.filter((_, i) => i % 2 === 0);
+  const right = filtered.filter((_, i) => i % 2 === 1);
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -34,34 +39,61 @@ export default function Notes() {
           </Pressable>
           <View className="ml-3 flex-1 flex-row items-center">
             <Search size={18} color={tokens.colors.secondary} />
-            <Text className="ml-2 text-[15px] text-secondary">Search your notes</Text>
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder="Search your notes"
+              placeholderTextColor={tokens.colors.secondary}
+              className="ml-2 flex-1 text-[15px] text-foreground"
+            />
           </View>
-          <Rows2 size={20} color={tokens.colors.secondary} />
-          <View className="ml-3 h-7 w-7 items-center justify-center rounded-full bg-blue/20">
+          <Pressable onPress={() => setCols((c) => (c === 2 ? 1 : 2))} hitSlop={8} accessibilityLabel="Toggle layout">
+            <Rows2 size={20} color={tokens.colors.secondary} />
+          </Pressable>
+          <Pressable
+            onPress={() => router.push('/menu')}
+            hitSlop={8}
+            accessibilityLabel="Account"
+            className="ml-3 h-7 w-7 items-center justify-center rounded-full bg-blue/20"
+          >
             <User size={16} color={tokens.colors.blue} />
-          </View>
+          </Pressable>
         </View>
       </View>
 
-      {notes.length === 0 ? (
+      {filtered.length === 0 ? (
         <View className="flex-1 items-center justify-center px-10">
-          <Text className="text-center text-[15px] text-secondary">Notes you add appear here</Text>
+          <Text className="text-center text-[15px] text-secondary">
+            {q ? 'No matching notes' : 'Notes you add appear here'}
+          </Text>
         </View>
       ) : (
         <ScrollView className="flex-1 px-3" contentContainerClassName="pt-1 pb-24">
-          <View className="flex-row gap-3">
-            <View className="flex-1">{left.map((n) => <NoteCard key={n.id} note={n} />)}</View>
-            <View className="flex-1">{right.map((n) => <NoteCard key={n.id} note={n} />)}</View>
-          </View>
+          {cols === 2 ? (
+            <View className="flex-row gap-3">
+              <View className="flex-1">{left.map((n) => <NoteCard key={n.id} note={n} />)}</View>
+              <View className="flex-1">{right.map((n) => <NoteCard key={n.id} note={n} />)}</View>
+            </View>
+          ) : (
+            <View>{filtered.map((n) => <NoteCard key={n.id} note={n} />)}</View>
+          )}
         </ScrollView>
       )}
 
       {/* Bottom toolbar + FAB */}
       <View className="absolute inset-x-0 bottom-0 h-16 flex-row items-center gap-6 border-t border-border bg-surface px-6">
-        <CheckSquare size={22} color={tokens.colors.secondary} />
-        <Pen size={22} color={tokens.colors.secondary} />
-        <Mic size={22} color={tokens.colors.secondary} />
-        <ImageIcon size={22} color={tokens.colors.secondary} />
+        <Pressable onPress={() => router.push('/note')} hitSlop={8} accessibilityLabel="New checklist">
+          <CheckSquare size={22} color={tokens.colors.secondary} />
+        </Pressable>
+        <Pressable onPress={() => router.push('/note')} hitSlop={8} accessibilityLabel="New drawing">
+          <Pen size={22} color={tokens.colors.secondary} />
+        </Pressable>
+        <Pressable onPress={() => router.push('/note')} hitSlop={8} accessibilityLabel="New voice note">
+          <Mic size={22} color={tokens.colors.secondary} />
+        </Pressable>
+        <Pressable onPress={() => router.push('/note')} hitSlop={8} accessibilityLabel="New image note">
+          <ImageIcon size={22} color={tokens.colors.secondary} />
+        </Pressable>
       </View>
       <Pressable
         onPress={() => router.push('/note')}
