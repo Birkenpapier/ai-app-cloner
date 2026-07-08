@@ -55,6 +55,7 @@ docs/diff/
 
 # internal launch planning (not for public template)
 LAUNCH_PLAN.md
+TOMORROW.md
 
 # verification harness output (generated)
 e2e/shots/
