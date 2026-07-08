@@ -1,36 +1,41 @@
-# Screen Graph
+# Screen Graph — MeisterTask
 
-Human-readable map of the cloned app's navigation. `/clone-app` writes this in
-Phase 3 alongside `app-spec.json`; it's the blueprint for Phase 7 assembly.
-
-> The content below is an **example** (matching `app-spec.example.json`). The
-> clone-app run overwrites it with the real app's graph.
+Human-readable map of the cloned app's navigation, backing `app-spec.json`.
 
 ## Navigation model
 
-**Type:** tabs · **Tab bar:** Home · Search · Profile
+**Type:** mixed (bottom **tabs** + **stack** pushes over them)
+**Tab bar (dark):** Notifications · Focus · Agenda · Projects — Agenda is the landing tab.
 
 ## Graph
 
 ```
-[Tabs]
- ├── Home  (default, empty, loading, dark)
- │     └──▶ NoteDetail   (tap a note row)
- ├── Search  (default, results)
- │     └──▶ NoteDetail   (tap a result)
- └── Profile  (default, dark)
-       └──▶ Settings     (tap "Settings" row)
+Login  (/)  — auth is backend → mocked; any button enters the app
+  └──▶ [Tabs]
 
-NoteDetail  — stack push, has back
-Settings    — stack push, has back
+[Tabs]
+ ├── Notifications  ─▶ TaskDetail   (tap a mention → its linked task)
+ ├── Focus          ─▶ TaskDetail   (in-progress tasks)
+ ├── Agenda ★default ─▶ TaskDetail   (tap a card)
+ │                   └▶ AddTask      (header +, modal)
+ └── Projects       ─▶ Board         (tap a project)
+
+Board  /board/[id]      — stack push, has close (X); ─▶ TaskDetail, ─▶ AddTask (FAB)
+TaskDetail /task/[id]   — stack push, has close (X); ─▶ Automations
+Automations /automations — stack push, has back
+AddTask /add-task       — modal
 ```
 
 ## Screens
 
-| Screen | Route | States | Reached via | Goes to |
-| --- | --- | --- | --- | --- |
-| Home | `/` | default, empty, loading, dark | tab | NoteDetail |
-| Search | `/search` | default, results | tab | NoteDetail |
-| Profile | `/profile` | default, dark | tab | Settings |
-| NoteDetail | `/note/[id]` | default | push from Home/Search | — |
-| Settings | `/settings` | default | push from Profile | — |
+| Screen | Route | States | Reached via | Goes to | From screenshot |
+| --- | --- | --- | --- | --- | --- |
+| Login | `/` | default | app launch | Agenda | — (brand entry) |
+| Agenda | `/agenda` | default | tab | TaskDetail, AddTask | ✅ `agenda.png` |
+| Notifications | `/notifications` | default | tab | TaskDetail | ✅ `notifications.png` |
+| Projects | `/projects` | default | tab | Board | — (derived) |
+| Focus | `/focus` | default, empty | tab | TaskDetail | — (derived) |
+| Board | `/board/[id]` | default | push from Projects | TaskDetail, AddTask | ✅ `board.png` |
+| TaskDetail | `/task/[id]` | default, completed | push from cards/notifs | Automations | ✅ `task-detail.png` |
+| Automations | `/automations` | default | push | — | ✅ `automations.png` |
+| AddTask | `/add-task` | modal | header + / FAB | — | — (derived) |

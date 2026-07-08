@@ -1,0 +1,104 @@
+{
+  "name": "MeisterTask",
+  "source": { "mode": "screenshots", "ref": "docs/screenshots/meistertask/" },
+  "tokens": {
+    "colors": {
+      "background": "#F1F2F6",
+      "surface": "#FFFFFF",
+      "surface2": "#F7F8FA",
+      "foreground": "#1C1E2E",
+      "secondary": "#8A8D9C",
+      "tertiary": "#B4B7C4",
+      "border": "#E7E8EE",
+      "primary": "#0087F2",
+      "gradFrom": "#3F63E3",
+      "gradTo": "#6E4FCF",
+      "green": "#22B14C",
+      "pink": "#F0486B",
+      "amber": "#F5A623",
+      "purple": "#7B4FD1",
+      "tabbar": "#1B1E2E"
+    },
+    "fonts": { "sans": "System", "mono": "Menlo" },
+    "spacing": { "screenX": 16 },
+    "radii": { "card": 14, "xl2": 18, "pill": 999 }
+  },
+  "navigation": {
+    "type": "mixed",
+    "items": ["Notifications", "Focus", "Agenda", "Projects"]
+  },
+  "screens": [
+    {
+      "name": "Login",
+      "route": "/",
+      "states": ["default"],
+      "sourceShots": [],
+      "transitionsTo": ["Agenda"],
+      "spec": "Brand entry (auth is backend → mocked). Re-created hexagon mark."
+    },
+    {
+      "name": "Agenda",
+      "route": "/agenda",
+      "states": ["default"],
+      "sourceShots": ["agenda.png"],
+      "transitionsTo": ["TaskDetail", "AddTask"],
+      "spec": "Gradient header + My Tasks/Guest/Focus stat cards + task list."
+    },
+    {
+      "name": "Notifications",
+      "route": "/notifications",
+      "states": ["default"],
+      "sourceShots": ["notifications.png"],
+      "transitionsTo": ["TaskDetail"],
+      "spec": "Good Morning header + quote + mention cards; tap → linked task."
+    },
+    {
+      "name": "Projects",
+      "route": "/projects",
+      "states": ["default"],
+      "sourceShots": [],
+      "transitionsTo": ["Board"],
+      "spec": "Derived index of projects → Board. Not in the screenshots."
+    },
+    {
+      "name": "Focus",
+      "route": "/focus",
+      "states": ["default", "empty"],
+      "sourceShots": [],
+      "transitionsTo": ["TaskDetail"],
+      "spec": "Derived: in-progress tasks, so the tab isn't dead."
+    },
+    {
+      "name": "Board",
+      "route": "/board/[id]",
+      "states": ["default"],
+      "sourceShots": ["board.png"],
+      "transitionsTo": ["TaskDetail", "AddTask"],
+      "spec": "Project board: colored section headers (Requests…), cards, FAB."
+    },
+    {
+      "name": "TaskDetail",
+      "route": "/task/[id]",
+      "states": ["default", "completed"],
+      "sourceShots": ["task-detail.png"],
+      "transitionsTo": ["Automations"],
+      "spec": "UPCOMING header, activity feed, add comment, Complete Task."
+    },
+    {
+      "name": "Automations",
+      "route": "/automations",
+      "states": ["default"],
+      "sourceShots": ["automations.png"],
+      "transitionsTo": [],
+      "spec": "Add Automation list; tap toggles + persists on-device."
+    },
+    {
+      "name": "AddTask",
+      "route": "/add-task",
+      "states": ["modal"],
+      "sourceShots": [],
+      "transitionsTo": [],
+      "spec": "New-task composer (modal). Creating a task is on-device."
+    }
+  ]
+}

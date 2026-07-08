@@ -1,33 +1,40 @@
 /** @type {import('tailwindcss').Config} */
 // ────────────────────────────────────────────────────────────────────────────
-// DESIGN TOKENS — the `/clone-app` foundation phase OVERWRITES the values below
-// with the cloned app's real palette/typography/spacing. This file is the home
-// for the cloned app's design system (the analog of a web project's globals.css
-// `:root` block). Keep the shape; replace the values.
-//
-// Note: these are flat token colors (e.g. `bg-background`, `text-primary`), not
-// Tailwind's numbered scales — `bg-blue-500` etc. are intentionally not defined.
+// DESIGN TOKENS — cloned from MeisterTask (iOS, light theme) via /clone-app.
+// Flat semantic token colors (e.g. `bg-background`, `text-foreground`), not
+// Tailwind's numbered scales. Keep this in sync with src/lib/tokens.ts.
 // ────────────────────────────────────────────────────────────────────────────
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
-  // NativeWind's web runtime manages color scheme via a class observer; without
-  // this it throws "Cannot manually set color scheme, as dark mode is type 'media'".
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        background: '#ffffff',
-        foreground: '#0a0a0a',
-        primary: '#208aef',
-        'primary-foreground': '#ffffff',
-        muted: '#f4f4f5',
-        'muted-foreground': '#71717a',
-        border: '#e4e4e7',
-        accent: '#f4f4f5',
+        background: '#F1F2F6', // grouped content bg (light lavender-gray)
+        surface: '#FFFFFF', // cards
+        surface2: '#F7F8FA', // insets / search fields
+        foreground: '#1C1E2E', // near-black text
+        secondary: '#8A8D9C', // secondary gray text
+        tertiary: '#B4B7C4', // faint text / icons
+        muted: '#EEEFF3',
+        'muted-foreground': '#9A9DAB',
+        border: '#E7E8EE',
+        primary: '#0087F2', // MeisterTask brand blue (actions, links, active tab)
+        'primary-foreground': '#FFFFFF',
+        'grad-from': '#3F63E3', // header gradient — blue
+        'grad-to': '#6E4FCF', // header gradient — purple
+        green: '#22B14C', // board header, "Open" tag, checkmarks
+        'green-soft': '#E6F8EE',
+        pink: '#F0486B', // "In Progress" accent, urgent due pills
+        amber: '#F5A623', // focus / guest accents
+        purple: '#7B4FD1',
+        tabbar: '#1B1E2E', // dark bottom tab bar
+        'tabbar-muted': '#6B6F82', // inactive tab icon
       },
       borderRadius: {
-        card: '16px',
+        card: '14px',
+        xl2: '18px',
       },
       fontFamily: {
         sans: ['System'],
