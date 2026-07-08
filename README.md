@@ -46,7 +46,7 @@ boots on its own:
 ```bash
 git clone https://github.com/Birkenpapier/ai-app-cloner
 cd ai-app-cloner && npm install
-git checkout demo/meistertask   # or: mindmeister · todoist · keep · spendee
+git checkout demo/discord       # or: meistertask · mindmeister · todoist · keep · spendee
 npm run web                     # opens the clone in a browser tab
 ```
 
@@ -113,7 +113,7 @@ Then, inside your coding agent (Claude Code is the reference setup):
 3. Run `/clone-app`.
 
 Want to see a finished result first? Each `demo/*` branch holds a complete clone:
-`git checkout demo/meistertask` (or `demo/mindmeister`, `demo/todoist`, `demo/keep`, `demo/spendee`).
+`git checkout demo/discord` (or `demo/meistertask`, `demo/mindmeister`, `demo/todoist`, `demo/keep`, `demo/spendee`).
 
 ## Works in these agents
 
@@ -186,15 +186,16 @@ straight from their App Store screenshots:
 
 | Clone | Original | What it shows off |
 | --- | --- | --- |
+| Discord | [Discord](https://discord.com) | the dark server rail + channel list, a chat where you send, edit, delete and react to messages, plus DMs you can search — all persisted |
 | MeisterTask | [MeisterTask](https://www.meistertask.com) | a gradient-header agenda, a kanban board where you drag cards between columns and swipe to delete, task detail with an editable title and comments you post, automations |
 | MindMeister | [MindMeister](https://www.mindmeister.com) | an outline editor where you rename nodes in place, add and delete branches with undo, a maps grid, comments, favorites you toggle |
 | Todoist | [Todoist](https://todoist.com) | tab navigation, a task list, add-task that saves on device |
 | Keep | [Google Keep](https://keep.google.com) | a notes grid, a note editor, labels |
 | Spendee | [Spendee](https://www.spendee.com) | tabs, and an expense you log that updates the running balance |
 
-Each `demo/*` branch (`demo/meistertask`, `demo/mindmeister`, `demo/todoist`,
-`demo/keep`, `demo/spendee`) holds one complete clone. They exist to demonstrate the
-tool, not to be shipped. See [Legal and ethics](#legal-and-ethics).
+Each `demo/*` branch (`demo/discord`, `demo/meistertask`, `demo/mindmeister`,
+`demo/todoist`, `demo/keep`, `demo/spendee`) holds one complete clone. They exist to
+demonstrate the tool, not to be shipped. See [Legal and ethics](#legal-and-ethics).
 
 ## Two modes
 
