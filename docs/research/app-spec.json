@@ -1,0 +1,88 @@
+{
+  "name": "MindMeister",
+  "source": { "mode": "screenshots", "ref": "docs/screenshots/mindmeister/" },
+  "tokens": {
+    "colors": {
+      "background": "#FFFFFF",
+      "surface2": "#F4F4F7",
+      "canvas": "#FBFBFD",
+      "foreground": "#1C1E2E",
+      "secondary": "#8A8D9C",
+      "border": "#EAEAEF",
+      "primary": "#E5187F",
+      "violet": "#7B5EDC",
+      "yellow": "#FFC53D",
+      "nodeBlue": "#4B7BEC",
+      "nodePurple": "#7B5EDC",
+      "nodeRed": "#F0486B",
+      "nodeOrange": "#F5A623",
+      "nodeTeal": "#12B5A6",
+      "nodeGreen": "#22B14C"
+    },
+    "fonts": { "sans": "System", "mono": "Menlo" },
+    "spacing": { "screenX": 16 },
+    "radii": { "card": 14, "node": 10, "pill": 999 }
+  },
+  "navigation": {
+    "type": "mixed",
+    "items": ["Recent", "Favorites", "Templates"]
+  },
+  "screens": [
+    {
+      "name": "Login",
+      "route": "/",
+      "states": ["default"],
+      "sourceShots": [],
+      "transitionsTo": ["Recent"],
+      "spec": "Brand entry (auth is backend → mocked). Re-created magenta mark."
+    },
+    {
+      "name": "Recent",
+      "route": "/recent",
+      "states": ["default"],
+      "sourceShots": ["recent.png"],
+      "transitionsTo": ["Editor", "NewMap"],
+      "spec": "2-col grid of map thumbnails + updated badge + favorite star."
+    },
+    {
+      "name": "Favorites",
+      "route": "/favorites",
+      "states": ["default", "empty"],
+      "sourceShots": [],
+      "transitionsTo": ["Editor"],
+      "spec": "Derived: starred maps, so the tab isn't dead."
+    },
+    {
+      "name": "Templates",
+      "route": "/templates",
+      "states": ["default"],
+      "sourceShots": [],
+      "transitionsTo": ["Editor"],
+      "spec": "Derived: template list → creates a new map on tap."
+    },
+    {
+      "name": "Editor",
+      "route": "/map/[id]",
+      "states": ["default", "icon-picker"],
+      "sourceShots": ["editor.png", "icon-picker.png"],
+      "transitionsTo": ["Comments"],
+      "spec": "Outline tree (central idea + colored node pills + connectors), toolbar; icon-picker is a bottom-sheet state."
+    },
+    {
+      "name": "Comments",
+      "route": "/comments/[id]",
+      "states": ["modal"],
+      "sourceShots": ["comments.png"],
+      "transitionsTo": [],
+      "spec": "Comment threads + composer; adding a comment is on-device."
+    },
+    {
+      "name": "NewMap",
+      "route": "/new-map",
+      "states": ["modal"],
+      "sourceShots": [],
+      "transitionsTo": ["Editor"],
+      "spec": "Name-your-map composer (modal). Creating a map is on-device."
+    }
+  ]
+}

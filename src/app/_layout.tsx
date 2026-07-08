@@ -4,13 +4,26 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-// Root layout. `/clone-app` rewrites this with the cloned app's navigation
-// (tabs / stack / drawer) derived from the inferred screen graph.
+import { tokens } from '@/lib/tokens';
+
+// Cloned from MindMeister: a login entry, a bottom-tab app (Recent / Favorites /
+// Templates), the map editor, and a comments modal pushed over it.
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-      <StatusBar style="auto" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: tokens.colors.background },
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="map/[id]" />
+        <Stack.Screen name="comments/[id]" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="new-map" options={{ presentation: 'modal' }} />
+      </Stack>
+      <StatusBar style="dark" />
     </SafeAreaProvider>
   );
 }
