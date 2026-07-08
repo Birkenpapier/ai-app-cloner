@@ -6,8 +6,9 @@
 
 [![License](https://img.shields.io/github/license/Birkenpapier/ai-app-cloner?color=blue)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/Birkenpapier/ai-app-cloner?style=flat&color=yellow)](https://github.com/Birkenpapier/ai-app-cloner/stargazers)
+[![CI](https://github.com/Birkenpapier/ai-app-cloner/actions/workflows/ci.yml/badge.svg)](https://github.com/Birkenpapier/ai-app-cloner/actions/workflows/ci.yml)
 ![Expo SDK 56](https://img.shields.io/badge/Expo-SDK%2056-000020?logo=expo&logoColor=white)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com/Birkenpapier/ai-app-cloner/issues)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
 
 You point your coding agent at a folder of screenshots. It works out the screens,
 the navigation, and the design system, then writes a runnable Expo / React Native
@@ -186,7 +187,7 @@ straight from their App Store screenshots:
 
 | Clone | Original | What it shows off |
 | --- | --- | --- |
-| Discord | [Discord](https://discord.com) | the dark server rail + channel list, a chat where you send, edit, delete and react to messages, plus DMs you can search — all persisted |
+| Discord | [Discord](https://discord.com) | the dark server rail + channel list, a chat where you send, edit, delete and react to messages, plus DMs you can search, all persisted |
 | MeisterTask | [MeisterTask](https://www.meistertask.com) | a gradient-header agenda, a kanban board where you drag cards between columns and swipe to delete, task detail with an editable title and comments you post, automations |
 | MindMeister | [MindMeister](https://www.mindmeister.com) | an outline editor where you rename nodes in place, add and delete branches with undo, a maps grid, comments, favorites you toggle |
 | Todoist | [Todoist](https://todoist.com) | tab navigation, a task list, add-task that saves on device |
@@ -259,6 +260,14 @@ legal advice before publishing a clone of a named product.
 The demos here are for demonstration only. This project is not affiliated with,
 endorsed by, or sponsored by any app or company shown. All product names, logos, and
 trademarks belong to their respective owners.
+
+## Contributing
+
+Contributions are genuinely welcome, and a lot of the useful work is not code. The
+highest-leverage thing you can do is run `/clone-app` on some app and file an
+[agent verification report](.github/ISSUE_TEMPLATE/agent-report.md) with what worked
+and what came out wrong. The rest is in [CONTRIBUTING.md](CONTRIBUTING.md). Be kind in
+reviews; we are all learning to measure a screenshot without a ruler. 💜
 
 ## License
 

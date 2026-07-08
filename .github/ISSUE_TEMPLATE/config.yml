@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📖 How do I run it?
+    url: https://github.com/Birkenpapier/ai-app-cloner#quickstart
+    about: Setup and usage are covered in the README Quickstart.
+  - name: 👀 Just want to see a clone run?
+    url: https://github.com/Birkenpapier/ai-app-cloner#see-a-clone-running-2-minutes
+    about: Check out a demo/* branch and run it in two minutes, no agent needed.
