@@ -27,12 +27,33 @@ project that reproduces them.
 </p>
 
 <sub>Five apps rebuilt from screenshots, running natively on the iOS 26 simulator.
-MeisterTask and MindMeister were cloned straight from their App Store screenshots.
-The data persists on device. These are not static mockups.</sub>
+You rename items in place, drag cards across a board, swipe to delete, and post a comment.
+It all persists on device. These are working apps, not static mockups.</sub>
+
+<br /><br />
+
+**[▶ See a clone running in 2 minutes](#see-a-clone-running-2-minutes)** &nbsp;·&nbsp; ⭐ Star it if it's useful. That's how the next person finds it.
 
 </div>
 
 ---
+
+## See a clone running (2 minutes)
+
+No coding agent and no MCP required. Every `demo/*` branch is a finished clone that
+boots on its own:
+
+```bash
+git clone https://github.com/Birkenpapier/ai-app-cloner
+cd ai-app-cloner && npm install
+git checkout demo/meistertask   # or: mindmeister · todoist · keep · spendee
+npm run web                     # opens the clone in a browser tab
+```
+
+Add a task, rename it in place, drag it to another board column, then reload the tab.
+Your changes are still there. Run `npm run verify` to replay those flows headlessly and
+screenshot every screen. When you're ready to build your **own** clone from screenshots,
+head to [Quickstart](#quickstart).
 
 ## Why screenshots
 
@@ -50,7 +71,28 @@ screen, renders it, screenshots its own output, compares that against your
 screenshot, and fixes the differences. It repeats until the two match. That loop is
 doing the measuring the DOM would have handed you for free on the web.
 
+## How this differs from web cloners
+
+This is the mobile counterpart to
+[JCodesMore/ai-website-cloner-template](https://github.com/JCodesMore/ai-website-cloner-template)
+(~26k ⭐), and the difference *is* the point:
+
+| | Web cloner | ai-app-cloner (this) |
+| --- | --- | --- |
+| Input | a live URL | a folder of screenshots |
+| Source of truth | the **DOM**: exact CSS, fonts, real asset files, for free | **pixels**: no numbers, no files |
+| Recovering the styling | read `getComputedStyle` | **render → screenshot → diff → fix**, looped until it matches |
+| Assets | downloaded from the page | re-created (icons via lucide) or cropped raster |
+| Targets | websites | any phone app, iOS or Android, nothing to install |
+
+The web version starts from an answer key. Here there isn't one, so the hard part
+(measuring) becomes the engine instead of a footnote.
+
 ## Quickstart
+
+**Prerequisites:** Node 18+ · a skill-capable AI coding agent (Claude Code is the
+reference) · a browser-automation MCP (Chrome / Playwright / Puppeteer). The diff loop
+screenshots the clone *through* that MCP, so it can't run without one.
 
 ```bash
 git clone https://github.com/Birkenpapier/ai-app-cloner
@@ -144,8 +186,8 @@ straight from their App Store screenshots:
 
 | Clone | Original | What it shows off |
 | --- | --- | --- |
-| MeisterTask | [MeisterTask](https://www.meistertask.com) | a gradient-header agenda, a kanban board, task detail with comments you post, automations |
-| MindMeister | [MindMeister](https://www.mindmeister.com) | a mind-map outline editor, a maps grid, comments, favorites you toggle |
+| MeisterTask | [MeisterTask](https://www.meistertask.com) | a gradient-header agenda, a kanban board where you drag cards between columns and swipe to delete, task detail with an editable title and comments you post, automations |
+| MindMeister | [MindMeister](https://www.mindmeister.com) | an outline editor where you rename nodes in place, add and delete branches with undo, a maps grid, comments, favorites you toggle |
 | Todoist | [Todoist](https://todoist.com) | tab navigation, a task list, add-task that saves on device |
 | Keep | [Google Keep](https://keep.google.com) | a notes grid, a note editor, labels |
 | Spendee | [Spendee](https://www.spendee.com) | tabs, and an expense you log that updates the running balance |
@@ -183,20 +225,22 @@ inferable from the screens (a list is a table, a row that opens a detail is a
 foreign key). Expo already looks native, so native codegen is the smaller marginal
 win and comes last.
 
-## Honest limitations
+## How close it gets (and why)
 
-This reverse-engineers an app from its pixels, and the README is not going to pretend
-otherwise:
+It reverse-engineers an app from pixels, so here is exactly where the fidelity comes
+from. Every limitation is real and stated on purpose, paired with what closes it:
 
-- **Screenshot mode has no exact values.** Spacing and colors are best-effort, and
-  the diff loop is what closes the gap. Web mode gets exact values from the DOM.
-- **Assets are baked into the pixels.** Logos, app icons, and photos are re-created
-  (icons via lucide) or cropped as raster, never recovered as real files. Web mode
-  can download the real assets.
-- **Coverage equals what you capture.** A screen or state you never screenshotted
-  cannot be cloned.
-- **No backend.** Data is mocked or kept on device. Every server call is a typed stub
-  marked `// TODO: wire backend`.
+- **No exact values in screenshot mode** → the diff loop renders the built screen,
+  compares it against your screenshot, and fixes the deltas *on a loop until they match*,
+  instead of guessing once. *(Web mode reads exact values straight from the DOM.)*
+- **Assets are baked into the pixels** → icons are re-created with lucide and matched by
+  eye; photos and logos are cropped raster. Nothing is passed off as an original file.
+  *(Web mode downloads the real assets.)*
+- **Coverage equals what you capture** → a screen or state you never screenshotted can't
+  be cloned, so the completion report lists exactly what wasn't covered.
+- **No backend in v1** → data is real but on-device and **persists across reloads**; every
+  server call is a typed stub marked `// TODO: wire backend`. Inferring a real backend is
+  [v2](ROADMAP.md).
 
 ## Legal and ethics
 
