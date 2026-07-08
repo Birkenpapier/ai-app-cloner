@@ -14,15 +14,21 @@ the navigation, and the design system, then writes a runnable Expo / React Nativ
 project that reproduces them.
 
 <p>
-  <img src="assets/demo/todoist.gif" width="220" alt="Todoist clone running natively on iOS" />
+  <img src="assets/demo/meistertask.gif" width="220" alt="MeisterTask clone running natively on iOS" />
   &nbsp;
-  <img src="assets/demo/keep.gif" width="220" alt="Google Keep clone running natively on iOS" />
+  <img src="assets/demo/mindmeister.gif" width="220" alt="MindMeister clone running natively on iOS" />
+</p>
+<p>
+  <img src="assets/demo/todoist.gif" width="180" alt="Todoist clone running natively on iOS" />
   &nbsp;
-  <img src="assets/demo/spendee.gif" width="220" alt="Spendee clone running natively on iOS" />
+  <img src="assets/demo/keep.gif" width="180" alt="Google Keep clone running natively on iOS" />
+  &nbsp;
+  <img src="assets/demo/spendee.gif" width="180" alt="Spendee clone running natively on iOS" />
 </p>
 
-<sub>Todoist, Google Keep, and Spendee, rebuilt from screenshots and running on the
-iOS simulator. The lists persist on the device. They are not static mockups.</sub>
+<sub>Five apps rebuilt from screenshots, running natively on the iOS 26 simulator.
+MeisterTask and MindMeister were cloned straight from their App Store screenshots.
+The data persists on device. These are not static mockups.</sub>
 
 </div>
 
@@ -65,7 +71,7 @@ Then, inside your coding agent (Claude Code is the reference setup):
 3. Run `/clone-app`.
 
 Want to see a finished result first? Each `demo/*` branch holds a complete clone:
-`git checkout demo/todoist` (or `demo/keep`, `demo/spendee`).
+`git checkout demo/meistertask` (or `demo/mindmeister`, `demo/todoist`, `demo/keep`, `demo/spendee`).
 
 ## Works in these agents
 
@@ -132,16 +138,21 @@ worked [example](docs/research/app-spec.example.json).
 
 ## The demos
 
-The three clones at the top are built from screenshots of real apps, so you can
-judge the output against something you already know:
+The clones at the top are built from screenshots of real apps, so you can judge the
+output against something you already know. MeisterTask and MindMeister were rebuilt
+straight from their App Store screenshots:
 
 | Clone | Original | What it shows off |
 | --- | --- | --- |
+| MeisterTask | [MeisterTask](https://www.meistertask.com) | a gradient-header agenda, a kanban board, task detail with comments you post, automations |
+| MindMeister | [MindMeister](https://www.mindmeister.com) | a mind-map outline editor, a maps grid, comments, favorites you toggle |
 | Todoist | [Todoist](https://todoist.com) | tab navigation, a task list, add-task that saves on device |
 | Keep | [Google Keep](https://keep.google.com) | a notes grid, a note editor, labels |
 | Spendee | [Spendee](https://www.spendee.com) | tabs, and an expense you log that updates the running balance |
 
-They exist to demonstrate the tool, not to be shipped. See [Legal and ethics](#legal-and-ethics).
+Each `demo/*` branch (`demo/meistertask`, `demo/mindmeister`, `demo/todoist`,
+`demo/keep`, `demo/spendee`) holds one complete clone. They exist to demonstrate the
+tool, not to be shipped. See [Legal and ethics](#legal-and-ethics).
 
 ## Two modes
 
@@ -158,14 +169,19 @@ Expo SDK 56, Expo Router (file-based screens), React Native 0.85, NativeWind
 ## Roadmap
 
 Each stage reads the same `app-spec.json`, so a new target is a new code generator,
-not a new pipeline.
+not a new pipeline. Full detail in [ROADMAP.md](ROADMAP.md).
 
 | Version | Input | Output | Status |
 | --- | --- | --- | --- |
-| **v1** | screenshots of an app | Expo / React Native | ✅ shipping now |
+| **v1** | screenshots of an app | Expo / React Native (data mocked on device) | ✅ shipping now |
 | **v1** | a web app URL | Expo / React Native | ✅ bonus mode |
-| **v2** | screenshots of an app | native SwiftUI and Jetpack Compose | 🔜 next |
-| **v3** | a decompiled APK | native, with exact values recovered | 🧭 planned |
+| **v2** | screenshots of an app | a full-stack app: an inferred schema + a typed CRUD backend | 🔜 next |
+| **v3** | screenshots of an app | native SwiftUI and Jetpack Compose | 🧭 planned |
+
+**Backend before native.** A running backend is the bigger unlock, and it is
+inferable from the screens (a list is a table, a row that opens a detail is a
+foreign key). Expo already looks native, so native codegen is the smaller marginal
+win and comes last.
 
 ## Honest limitations
 
