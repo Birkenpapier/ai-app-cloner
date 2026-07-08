@@ -5,16 +5,28 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-// Root layout. `/clone-app` rewrites this with the cloned app's navigation
-// (tabs / stack / drawer) derived from the inferred screen graph. Keep the
-// GestureHandlerRootView wrapper so swipe / drag / reorder gestures work out of
-// the box (react-native-gesture-handler throws without it).
+import { tokens } from '@/lib/tokens';
+
+// Cloned from Discord (dark theme): a bottom-tab home (Messages / Notifications /
+// You) with the server rail, plus server channel lists and full-screen channel
+// and DM chats pushed over it. GestureHandlerRootView so long-press works.
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-        <StatusBar style="auto" />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: tokens.colors.background },
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="server/[id]" />
+          <Stack.Screen name="channel/[id]" />
+          <Stack.Screen name="dm/[id]" />
+        </Stack>
+        <StatusBar style="light" />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
