@@ -42,10 +42,10 @@ add reaction · scroll history. Realtime/voice → mocked.
 
 ---
 
-## 2. Linear ⭐ (my add — dev-audience bullseye, id 1645587184)
+## 2. Linear ⭐ (id 1645587184)
 
-**WOW:** gorgeous, beloved by exactly our HN/dev crowd. **Pure CRUD** = the cleanest
-possible v2 demo. Screenshots: capture ~5 in-app (API gave 0).
+**WOW:** gorgeous, beloved by developers. **Pure CRUD** = the cleanest possible v2
+demo. Screenshots: capture ~5 in-app (API gave 0).
 
 **Screens:** issue list (grouped by status) · issue detail · board / kanban ·
 project view · My Issues · create-issue sheet.
@@ -69,7 +69,7 @@ set priority · comment · filter by status. All genuinely mockable.
 
 ---
 
-## 3. Notion (his pick, id 1232780281)
+## 3. Notion (id 1232780281)
 
 **WOW:** tech-crowd darling, clean. Screenshots: capture ~5 in-app (API gave 0).
 

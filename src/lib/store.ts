@@ -43,8 +43,11 @@ class Collection<T extends WithId> {
     // Hydrate once from storage without blocking render. On web, AsyncStorage is
     // localStorage; guard SSR/prerender where `window` is absent.
     if (typeof window !== 'undefined') {
-      void readCollection<T>(this.key).then((stored) => {
-        if (stored.length) this.items = stored;
+      // Load whatever is stored under this key — including an empty array. A key
+      // that EXISTS wins over the seed, so deleting every item persists as empty
+      // instead of silently resurrecting the seed data on the next reload.
+      void AsyncStorage.getItem(this.key).then((raw) => {
+        if (raw != null) this.items = JSON.parse(raw) as T[];
         this.ready = true;
         this.emit();
       });
