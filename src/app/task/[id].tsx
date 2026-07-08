@@ -68,6 +68,8 @@ export default function TaskDetail() {
   const { items: tasks, update } = useTasks();
   const { items: comments, add: addComment } = useComments();
   const [draft, setDraft] = useState('');
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState('');
 
   const task = tasks.find((t) => t.id === id);
   if (!task) {
@@ -88,6 +90,12 @@ export default function TaskDetail() {
     setDraft('');
   };
 
+  const saveTitle = () => {
+    setEditingTitle(false);
+    const next = titleDraft.trim();
+    if (next && next !== task.title) update(task.id, { title: next });
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-surface" edges={['top']}>
       {/* Header */}
@@ -106,7 +114,29 @@ export default function TaskDetail() {
 
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }}>
-          <Text className="mt-1 text-[20px] font-bold leading-[26px] text-foreground">{task.title}</Text>
+          {editingTitle ? (
+            <TextInput
+              autoFocus
+              value={titleDraft}
+              onChangeText={setTitleDraft}
+              onSubmitEditing={saveTitle}
+              onBlur={saveTitle}
+              accessibilityLabel="Task title input"
+              returnKeyType="done"
+              selectTextOnFocus
+              className="mt-1 text-[20px] font-bold leading-[26px] text-foreground"
+            />
+          ) : (
+            <Pressable
+              onPress={() => {
+                setTitleDraft(task.title);
+                setEditingTitle(true);
+              }}
+              accessibilityLabel="Edit task title"
+            >
+              <Text className="mt-1 text-[20px] font-bold leading-[26px] text-foreground">{task.title}</Text>
+            </Pressable>
+          )}
           <View className="mt-1.5 flex-row items-center gap-1.5">
             <View className="h-3.5 w-3.5 items-center justify-center rounded-[3px] bg-primary">
               <Check size={9} color="#ffffff" />

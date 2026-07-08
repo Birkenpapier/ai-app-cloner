@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
-import { CheckSquare, Clock, ImageIcon, MessageSquare } from 'lucide-react-native';
+import { CheckSquare, Clock, ImageIcon, MessageSquare, Trash2 } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 
 import { Avatar } from '@/components/Avatar';
 import { Tag } from '@/components/Tag';
@@ -9,11 +10,24 @@ import { tokens } from '@/lib/tokens';
 
 // The task card shown in Agenda and on the project Board. Tapping it opens the
 // task detail. `showProject` adds the "Marketing Requests" label (Agenda only —
-// on a board you're already inside the project).
-export function TaskCard({ task, showProject = false }: { task: Task; showProject?: boolean }) {
-  return (
+// on a board you're already inside the project). `onLongPress` opens the board's
+// move/delete sheet; `onDelete` (when set) enables swipe-to-delete on the card.
+export function TaskCard({
+  task,
+  showProject = false,
+  onLongPress,
+  onDelete,
+}: {
+  task: Task;
+  showProject?: boolean;
+  onLongPress?: () => void;
+  onDelete?: () => void;
+}) {
+  const card = (
     <Pressable
       onPress={() => router.push(`/task/${task.id}`)}
+      onLongPress={onLongPress}
+      delayLongPress={400}
       accessibilityLabel={`Open ${task.title}`}
       className="mb-3 overflow-hidden rounded-card bg-surface"
       style={{
@@ -93,5 +107,24 @@ export function TaskCard({ task, showProject = false }: { task: Task; showProjec
         ) : null}
       </View>
     </Pressable>
+  );
+
+  if (!onDelete) return card;
+  return (
+    <Swipeable
+      overshootRight={false}
+      renderRightActions={() => (
+        <Pressable
+          onPress={onDelete}
+          accessibilityLabel={`Swipe delete ${task.title}`}
+          className="mb-3 ml-2 items-center justify-center rounded-card px-5"
+          style={{ backgroundColor: tokens.colors.pink }}
+        >
+          <Trash2 size={18} color="#ffffff" />
+        </Pressable>
+      )}
+    >
+      {card}
+    </Swipeable>
   );
 }

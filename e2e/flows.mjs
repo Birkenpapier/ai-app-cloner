@@ -41,6 +41,56 @@ export const flows = [
     },
   },
   {
+    name: "edit a task's title -> it changes and persists across a reload",
+    run: async (page, base, { wait }) => {
+      await page.goto(base + '/task/t-csr', { waitUntil: 'networkidle' });
+      await wait(400);
+      await page.getByLabel('Edit task title').click();
+      await wait(200);
+      await page.getByLabel('Task title input').fill('CSR deck (edited)');
+      await page.getByLabel('Task title input').press('Enter');
+      await wait(300);
+      if ((await page.getByText('CSR deck (edited)').count()) === 0) throw new Error('title did not change');
+      if ((await page.getByText('[CR] CSR @ Fulenn').count()) !== 0) throw new Error('old title still present');
+      await page.reload({ waitUntil: 'networkidle' });
+      await wait(700);
+      if ((await page.getByText('CSR deck (edited)').count()) === 0) throw new Error('title edit did NOT persist');
+    },
+  },
+  {
+    name: 'move a card to another board section -> it lands there and persists',
+    run: async (page, base, { wait }) => {
+      await page.goto(base + '/board/marketing-requests', { waitUntil: 'networkidle' });
+      await wait(400);
+      // "Done" has no seed tasks, so its header is hidden until a card lands there.
+      if ((await page.getByText('Done', { exact: true }).count()) !== 0) throw new Error('Done section unexpectedly shown');
+      await page.getByLabel('Open [Internal] Pandemic Rules').click({ delay: 600 }); // long-press -> sheet
+      await wait(300);
+      await page.getByLabel('Move to Done').click();
+      await wait(300);
+      if ((await page.getByText('Done', { exact: true }).count()) === 0) throw new Error('card did not move to Done');
+      await page.reload({ waitUntil: 'networkidle' });
+      await wait(700);
+      if ((await page.getByText('Done', { exact: true }).count()) === 0) throw new Error('move did NOT persist');
+    },
+  },
+  {
+    name: 'delete a card via the actions sheet -> it disappears and stays gone',
+    run: async (page, base, { wait }) => {
+      await page.goto(base + '/board/marketing-requests', { waitUntil: 'networkidle' });
+      await wait(400);
+      const card = page.getByLabel('Open [Whitepaper] The Social Media Era, an opportunity for businesses?');
+      await card.click({ delay: 600 }); // long-press -> sheet
+      await wait(300);
+      await page.getByLabel('Delete task').click();
+      await wait(300);
+      if ((await card.count()) !== 0) throw new Error('card was not deleted');
+      await page.reload({ waitUntil: 'networkidle' });
+      await wait(700);
+      if ((await card.count()) !== 0) throw new Error('delete did NOT persist');
+    },
+  },
+  {
     name: 'complete a task -> completion persists across a reload',
     run: async (page, base, { wait }) => {
       await page.goto(base + '/task/t-pandemic', { waitUntil: 'networkidle' });

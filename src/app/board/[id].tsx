@@ -1,10 +1,12 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { ChevronDown, MoveRight, Plus, Search, SlidersHorizontal, X } from 'lucide-react-native';
+import { ChevronDown, MoveRight, Plus, Search, SlidersHorizontal, Trash2, X } from 'lucide-react-native';
+import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { TaskCard } from '@/components/TaskCard';
-import { BOARD_SECTIONS, projectById, useTasks } from '@/lib/data';
+import { BOARD_SECTIONS, projectById, type Task, useTasks } from '@/lib/data';
+import { tokens } from '@/lib/tokens';
 
 const SECTION_COLOR: Record<string, string> = {
   Requests: '#22B14C',
@@ -31,9 +33,19 @@ function SectionHeader({ name, count }: { name: string; count: number }) {
 
 export default function Board() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { items: tasks } = useTasks();
+  const { items: tasks, update, remove } = useTasks();
+  const [actionTask, setActionTask] = useState<Task | null>(null);
   const project = projectById(id);
   const projectTasks = tasks.filter((t) => t.project === project.name);
+
+  const moveTo = (section: string) => {
+    if (actionTask) update(actionTask.id, { section });
+    setActionTask(null);
+  };
+  const deleteTask = () => {
+    if (actionTask) remove(actionTask.id);
+    setActionTask(null);
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -56,7 +68,12 @@ export default function Board() {
             <View key={section} className="mb-2">
               <SectionHeader name={section} count={sectionTasks.length} />
               {sectionTasks.map((t) => (
-                <TaskCard key={t.id} task={t} />
+                <TaskCard
+                  key={t.id}
+                  task={t}
+                  onLongPress={() => setActionTask(t)}
+                  onDelete={() => remove(t.id)}
+                />
               ))}
             </View>
           );
@@ -77,6 +94,41 @@ export default function Board() {
       >
         <Plus size={28} color="#ffffff" />
       </Pressable>
+
+      {/* Long-press a card to move it across sections or delete it (a board state) */}
+      {actionTask ? (
+        <View className="absolute inset-0 justify-end bg-black/20">
+          <Pressable className="flex-1" onPress={() => setActionTask(null)} accessibilityLabel="Dismiss actions" />
+          <View className="rounded-t-3xl bg-surface px-4 pb-8 pt-4">
+            <Text className="mb-1 text-[12px] font-semibold uppercase tracking-wide text-secondary">Move to</Text>
+            <Text className="mb-3 text-[15px] font-semibold text-foreground" numberOfLines={1}>
+              {actionTask.title}
+            </Text>
+            {BOARD_SECTIONS.filter((s) => s !== actionTask.section).map((section) => (
+              <Pressable
+                key={section}
+                onPress={() => moveTo(section)}
+                accessibilityLabel={`Move to ${section}`}
+                className="mb-2 flex-row items-center gap-3 rounded-xl bg-surface2 px-3.5 py-3"
+              >
+                <View className="h-3 w-3 rounded-full" style={{ backgroundColor: SECTION_COLOR[section] }} />
+                <Text className="text-[14px] font-medium text-foreground">{section}</Text>
+              </Pressable>
+            ))}
+            <Pressable
+              onPress={deleteTask}
+              accessibilityLabel="Delete task"
+              className="mt-2 flex-row items-center justify-center gap-2 rounded-xl px-3.5 py-3"
+              style={{ backgroundColor: '#FDE7EC' }}
+            >
+              <Trash2 size={17} color={tokens.colors.pink} />
+              <Text className="text-[14px] font-semibold" style={{ color: tokens.colors.pink }}>
+                Delete task
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 }
