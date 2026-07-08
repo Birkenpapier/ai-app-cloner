@@ -51,6 +51,55 @@ export const flows = [
     },
   },
   {
+    name: "rename a node's text in place -> it changes and persists",
+    run: async (page, base, { wait }) => {
+      await page.goto(base + '/map/campaign', { waitUntil: 'networkidle' });
+      await wait(400);
+      const pill = page.getByLabel('Node Problem Statement');
+      await pill.click(); // select
+      await wait(160);
+      await pill.click(); // tap again -> edit in place
+      await wait(220);
+      await page.getByLabel('Node text input').fill('Renamed idea');
+      await page.getByLabel('Node text input').press('Enter');
+      await wait(300);
+      if ((await page.getByText('Renamed idea').count()) === 0) throw new Error('rename did not take effect');
+      if ((await page.getByText('Problem Statement').count()) !== 0) throw new Error('old label still present');
+      await page.reload({ waitUntil: 'networkidle' });
+      await wait(700);
+      if ((await page.getByText('Renamed idea').count()) === 0) throw new Error('rename did NOT persist');
+    },
+  },
+  {
+    name: 'delete a node -> it disappears and stays gone across a reload',
+    run: async (page, base, { wait }) => {
+      await page.goto(base + '/map/campaign', { waitUntil: 'networkidle' });
+      await wait(400);
+      await page.getByLabel('Node Amanda').click(); // select the target
+      await wait(160);
+      await page.getByLabel('Style node').click(); // open the actions sheet
+      await wait(280);
+      await page.getByLabel('Remove node').click();
+      await wait(300);
+      if ((await page.getByText('Amanda', { exact: true }).count()) !== 0) throw new Error('node was not deleted');
+      await page.reload({ waitUntil: 'networkidle' });
+      await wait(700);
+      if ((await page.getByText('Amanda', { exact: true }).count()) !== 0) throw new Error('delete did NOT persist');
+    },
+  },
+  {
+    name: 'long-press a node -> opens the actions sheet (gesture)',
+    run: async (page, base, { wait }) => {
+      await page.goto(base + '/map/campaign', { waitUntil: 'networkidle' });
+      await wait(400);
+      // A long press = pointer held down; Playwright models it as a delayed click.
+      await page.getByLabel('Node Alan').click({ delay: 600 });
+      await wait(300);
+      if ((await page.getByText('Icons', { exact: true }).count()) === 0)
+        throw new Error('long-press did not open the actions sheet');
+    },
+  },
+  {
     name: 'favorite a map -> it shows in Favorites and persists',
     run: async (page, base, { wait }) => {
       await page.goto(base + '/recent', { waitUntil: 'networkidle' });
