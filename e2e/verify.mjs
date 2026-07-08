@@ -34,7 +34,17 @@ if (!base) {
     console.error('No dist/ found — run `expo export --platform web` first (or `npm run verify`).');
     process.exit(2);
   }
-  const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
+  const TYPES = {
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+    '.json': 'application/json',
+    '.png': 'image/png',
+    '.svg': 'image/svg+xml',
+    '.ttf': 'font/ttf',
+    '.woff2': 'font/woff2',
+    '.ico': 'image/x-icon',
+  };
   server = http.createServer((req, res) => {
     const url = decodeURIComponent(req.url.split('?')[0]);
     // Resolve within DIST and reject anything that escapes it (path traversal).
@@ -42,7 +52,8 @@ if (!base) {
     const inside = resolved === DIST || resolved.startsWith(DIST + path.sep);
     let file = resolved;
     // SPA fallback: root, extensionless routes, escapes, or misses -> index.html.
-    if (url === '/' || !path.extname(url) || !inside || !fs.existsSync(file)) file = path.join(DIST, 'index.html');
+    if (url === '/' || !path.extname(url) || !inside || !fs.existsSync(file))
+      file = path.join(DIST, 'index.html');
     res.writeHead(200, { 'content-type': TYPES[path.extname(file)] || 'application/octet-stream' });
     fs.createReadStream(file).pipe(res);
   });
@@ -58,7 +69,9 @@ try {
   browser = await chromium.launch();
 } catch (e) {
   console.error('\nCould not launch Chromium for verification.');
-  console.error('If this is a fresh clone, install the browser once with:\n  npx playwright install chromium\n');
+  console.error(
+    'If this is a fresh clone, install the browser once with:\n  npx playwright install chromium\n',
+  );
   console.error(String(e?.message || e));
   if (server) server.close();
   process.exit(2);
@@ -102,9 +115,13 @@ if (server) server.close();
 
 // Report.
 console.log('\n=== ROUTES (render + console) ===');
-for (const r of routeResults) console.log(`  ${r.errors === 0 ? '✅' : '❌'} ${r.route}  (${r.errors} error${r.errors === 1 ? '' : 's'})`);
+for (const r of routeResults)
+  console.log(
+    `  ${r.errors === 0 ? '✅' : '❌'} ${r.route}  (${r.errors} error${r.errors === 1 ? '' : 's'})`,
+  );
 console.log('\n=== FEATURE FLOWS ===');
-for (const f of flowResults) console.log(`  ${f.ok && f.errors === 0 ? '✅' : '❌'} ${f.name}${f.msg ? '  — ' + f.msg : ''}`);
+for (const f of flowResults)
+  console.log(`  ${f.ok && f.errors === 0 ? '✅' : '❌'} ${f.name}${f.msg ? '  — ' + f.msg : ''}`);
 if (errors.length) {
   console.log('\n=== ERROR DETAIL ===');
   for (const e of errors) console.log('  ' + e);
