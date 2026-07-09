@@ -4,6 +4,22 @@ All notable changes are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project aims for
 [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-07-09
+
+The demos now move. v1.0 proved the clones run; v1.1 shows it.
+
+### Added
+
+- **Native interaction GIFs.** The demo GIFs are recorded on the iOS simulator and
+  show the real interactions, not just tab-switching: Discord (send a message, edit
+  it in place, react), MeisterTask (move cards across the kanban board, delete one),
+  MindMeister (rename a node in place, add a branch, delete one). All of it persists.
+- **Discord** joins the lineup as the sixth demo clone.
+
+### Changed
+
+- README hero is now six apps with an interaction-focused caption.
+
 ## [1.0.0] - 2026-07-08
 
 The first release. Give a coding agent a folder of an app's screenshots, and it
@@ -38,4 +54,5 @@ reconstructs a working Expo / React Native project that reproduces them.
 - Coverage equals what you screenshot. Data is mocked or on-device; a real backend
   is [v2](ROADMAP.md).
 
+[1.1.0]: https://github.com/Birkenpapier/ai-app-cloner/releases/tag/v1.1.0
 [1.0.0]: https://github.com/Birkenpapier/ai-app-cloner/releases/tag/v1.0.0
