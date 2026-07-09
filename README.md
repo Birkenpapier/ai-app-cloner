@@ -15,9 +15,11 @@ the navigation, and the design system, then writes a runnable Expo / React Nativ
 project that reproduces them.
 
 <p>
-  <img src="assets/demo/meistertask.gif" width="220" alt="MeisterTask clone running natively on iOS" />
+  <img src="assets/demo/discord.gif" width="200" alt="Discord clone running natively on iOS" />
   &nbsp;
-  <img src="assets/demo/mindmeister.gif" width="220" alt="MindMeister clone running natively on iOS" />
+  <img src="assets/demo/meistertask.gif" width="200" alt="MeisterTask clone running natively on iOS" />
+  &nbsp;
+  <img src="assets/demo/mindmeister.gif" width="200" alt="MindMeister clone running natively on iOS" />
 </p>
 <p>
   <img src="assets/demo/todoist.gif" width="180" alt="Todoist clone running natively on iOS" />
@@ -27,8 +29,8 @@ project that reproduces them.
   <img src="assets/demo/spendee.gif" width="180" alt="Spendee clone running natively on iOS" />
 </p>
 
-<sub>Five apps rebuilt from screenshots, running natively on the iOS 26 simulator.
-You rename items in place, drag cards across a board, swipe to delete, and post a comment.
+<sub>Six apps rebuilt from screenshots, running natively on the iOS 26 simulator.
+You send and edit messages, rename items in place, move cards across a board, delete, and react.
 It all persists on device. These are working apps, not static mockups.</sub>
 
 <br /><br />
