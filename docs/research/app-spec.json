@@ -100,5 +100,114 @@
       "transitionsTo": [],
       "spec": "New-task composer (modal). Creating a task is on-device."
     }
-  ]
+  ],
+  "dataModel": {
+    "generatedBy": "two-pass-inference",
+    "confidence": "proposal",
+    "notes": "Inferred from the MeisterTask UI (Agenda, Board, Task detail, Notifications, Automations). Projects and sections are inferred as their own tables from the board grouping; every relation is a HINT. tags and checklist are shown in-card as arrays, modeled as json (not their own tables). Not deducible: auth, org membership, real-time sync, automation trigger logic.",
+    "entities": [
+      {
+        "name": "Person",
+        "table": "people",
+        "sourceScreens": ["Agenda", "Notifications", "TaskDetail"],
+        "confidence": "high",
+        "fields": [
+          { "name": "id", "type": "id" },
+          { "name": "name", "type": "text", "evidence": "assignee + notification actor names" },
+          { "name": "initials", "type": "text", "evidence": "avatar initials (photos not recoverable)" },
+          { "name": "color", "type": "text", "evidence": "avatar tint" }
+        ]
+      },
+      {
+        "name": "Project",
+        "table": "projects",
+        "sourceScreens": ["Projects", "Board"],
+        "confidence": "medium",
+        "fields": [
+          { "name": "id", "type": "id" },
+          { "name": "name", "type": "text", "evidence": "board title, e.g. \"Marketing Requests\"" }
+        ]
+      },
+      {
+        "name": "Section",
+        "table": "sections",
+        "sourceScreens": ["Board"],
+        "confidence": "medium",
+        "fields": [
+          { "name": "id", "type": "id" },
+          { "name": "name", "type": "text", "evidence": "board column header, e.g. \"Requests\", \"Done\"" }
+        ],
+        "relations": [
+          { "field": "projectId", "references": "projects", "kind": "belongsTo", "confidence": "hint", "evidence": "columns live under a board" }
+        ]
+      },
+      {
+        "name": "Task",
+        "table": "tasks",
+        "sourceScreens": ["Agenda", "Board", "TaskDetail"],
+        "confidence": "high",
+        "fields": [
+          { "name": "id", "type": "id" },
+          { "name": "title", "type": "text", "evidence": "card + detail title" },
+          { "name": "description", "type": "text", "evidence": "task detail body" },
+          { "name": "status", "type": "enum", "enumValues": ["open", "in-progress", "done"], "evidence": "card status + Complete Task button" },
+          { "name": "due", "type": "text", "optional": true, "evidence": "due-date pill, e.g. \"2 May 2022\"" },
+          { "name": "dueUrgent", "type": "boolean", "optional": true, "evidence": "red due pill" },
+          { "name": "tags", "type": "json", "tsType": "{ label: string; kind: string }[]", "evidence": "colored tag chips on cards" },
+          { "name": "commentsCount", "type": "integer", "evidence": "comment count badge" },
+          { "name": "checklist", "type": "json", "optional": true, "tsType": "[number, number]", "evidence": "checklist \"[done, total]\" badge" },
+          { "name": "cover", "type": "boolean", "optional": true, "evidence": "card cover image (approximated)" },
+          { "name": "today", "type": "boolean", "optional": true, "evidence": "shown in Agenda My Tasks" }
+        ],
+        "relations": [
+          { "field": "projectId", "references": "projects", "kind": "belongsTo", "confidence": "hint", "evidence": "card grouped under a board" },
+          { "field": "sectionId", "references": "sections", "kind": "belongsTo", "confidence": "hint", "evidence": "card sits in a board column" },
+          { "field": "assigneeId", "references": "people", "kind": "belongsTo", "confidence": "hint", "evidence": "assignee avatar on card" }
+        ]
+      },
+      {
+        "name": "Comment",
+        "table": "comments",
+        "sourceScreens": ["TaskDetail"],
+        "confidence": "high",
+        "fields": [
+          { "name": "id", "type": "id" },
+          { "name": "taskId", "type": "text", "evidence": "comment belongs to the open task" },
+          { "name": "actorId", "type": "text", "evidence": "comment author avatar" },
+          { "name": "text", "type": "text", "evidence": "comment body" },
+          { "name": "createdAt", "type": "timestamp", "evidence": "comment timestamp" }
+        ]
+      },
+      {
+        "name": "NotificationItem",
+        "table": "notifications",
+        "sourceScreens": ["Notifications"],
+        "confidence": "high",
+        "fields": [
+          { "name": "id", "type": "id" },
+          { "name": "action", "type": "text", "evidence": "\"mentioned you in a comment on\"" },
+          { "name": "target", "type": "text", "evidence": "linked task title" },
+          { "name": "excerpt", "type": "text", "evidence": "comment excerpt" },
+          { "name": "time", "type": "text", "evidence": "\"JUST NOW\", \"39 MINUTES\"" },
+          { "name": "group", "type": "text", "evidence": "\"Today\" section header" },
+          { "name": "read", "type": "boolean", "evidence": "unread dot" }
+        ],
+        "relations": [
+          { "field": "actorId", "references": "people", "kind": "belongsTo", "confidence": "hint", "evidence": "notification actor avatar" }
+        ]
+      },
+      {
+        "name": "Automation",
+        "table": "automations",
+        "sourceScreens": ["Automations"],
+        "confidence": "medium",
+        "fields": [
+          { "name": "id", "type": "id" },
+          { "name": "title", "type": "text", "evidence": "automation row title, e.g. \"Assign Task\"" },
+          { "name": "icon", "type": "text", "evidence": "row icon" },
+          { "name": "tint", "type": "text", "evidence": "icon tint" }
+        ]
+      }
+    ]
+  }
 }

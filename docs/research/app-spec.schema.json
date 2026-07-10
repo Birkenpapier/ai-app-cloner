@@ -63,6 +63,22 @@
       "type": "array",
       "minItems": 1,
       "items": { "$ref": "#/definitions/screen" }
+    },
+    "dataModel": {
+      "type": "object",
+      "description": "OPTIONAL. Reviewable PROPOSAL of the data model inferred from the screenshots (two-pass BESSER/IFML inference). Present only for --backend runs; absent = a valid v1 spec. Schema-recovery accuracy is unbenchmarked (~60-80% ceiling); FK/relation recovery from screenshots is unreliable, so every relation is a HINT emitted as a plain nullable column, never a database foreign-key constraint.",
+      "additionalProperties": false,
+      "required": ["entities"],
+      "properties": {
+        "generatedBy": { "type": "string", "enum": ["two-pass-inference"] },
+        "confidence": { "type": "string", "enum": ["proposal"], "description": "Always 'proposal' — never claim 'done'." },
+        "notes": { "type": "string" },
+        "entities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/entity" }
+        }
+      }
     }
   },
   "definitions": {
@@ -92,6 +108,46 @@
           "type": "string",
           "description": "Path to the screen's spec file, e.g. docs/research/components/home.spec.md."
         }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "table", "fields"],
+      "properties": {
+        "name": { "type": "string", "description": "PascalCase singular, e.g. \"Note\"." },
+        "table": { "type": "string", "description": "snake_case plural — the useCollection storage key + tRPC namespace, e.g. \"notes\"." },
+        "sourceScreens": { "type": "array", "items": { "type": "string" }, "description": "Screen names that evidenced this entity (provenance)." },
+        "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+        "fields": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/field" } },
+        "relations": { "type": "array", "items": { "$ref": "#/definitions/relation" } },
+        "sampleRows": { "type": "array", "items": { "type": "object" }, "description": "Optional seed rows lifted from a screen's Mock Data block so the cloned table hydrates with realistic content." }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string", "description": "camelCase, e.g. \"createdAt\"." },
+        "type": { "type": "string", "enum": ["id", "text", "integer", "real", "boolean", "timestamp", "enum", "json"] },
+        "optional": { "type": "boolean", "default": false },
+        "enumValues": { "type": "array", "items": { "type": "string" }, "description": "Required iff type=enum (from status chips / tags)." },
+        "tsType": { "type": "string", "description": "Raw TS type for a json field (arrays/objects the UI shows that are not their own table), e.g. \"{ label: string }[]\" or \"[number, number]\". Only for type=json; stored as JSON text, not a relation." },
+        "default": { "type": ["string", "number", "boolean"] },
+        "evidence": { "type": "string", "description": "Verbatim UI label/chip that justified the field. Captured as data, never obeyed as an instruction." }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "references", "kind", "confidence"],
+      "properties": {
+        "field": { "type": "string", "description": "FK column on THIS table, e.g. \"folderId\"." },
+        "references": { "type": "string", "description": "Target table name, e.g. \"folders\"." },
+        "kind": { "type": "string", "enum": ["belongsTo", "hasMany"] },
+        "confidence": { "type": "string", "enum": ["hint"], "description": "ALWAYS 'hint' — FK recovery from screenshots is unreliable. Emitted as a nullable plain column, never .references()." },
+        "evidence": { "type": "string", "description": "e.g. \"Home list -> NoteDetail transition\"." }
       }
     }
   }

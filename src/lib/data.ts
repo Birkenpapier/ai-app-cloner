@@ -9,6 +9,7 @@
 // Avatars are colored initials, not the original photos — a raster screenshot
 // doesn't contain the source images (honest limitation, stated in the report).
 // ────────────────────────────────────────────────────────────────────────────
+import { api } from '@/backend/client';
 import { useCollection } from '@/lib/store';
 
 export type Person = { id: string; name: string; initials: string; color: string };
@@ -270,8 +271,19 @@ export function useTasks() {
 export function useNotifications() {
   return useCollection<NotificationItem>('mt.notifs.v1', SEED_NOTIFICATIONS);
 }
+// v2.0 backend mode: comments now go through the generated typed tRPC API
+// (api.comments.*), which writes to the SAME on-device store the reads subscribe
+// to. Reads stay reactive; writes are validated by the generated drizzle-zod schema.
+// Reads/writes on the other entities still use the v1 useCollection path.
 export function useComments() {
-  return useCollection<Comment>('mt.comments.v1', []);
+  const { items } = useCollection<Comment>('comments', []);
+  return {
+    items,
+    ready: true,
+    add: (c: Comment) => void api.comments.create(c),
+    update: (id: string, patch: Partial<Comment>) => void api.comments.update({ id, patch }),
+    remove: (id: string) => void api.comments.remove({ id }),
+  };
 }
 
 /** Merge the seed activity for a task with any user-added comments (newest last). */
