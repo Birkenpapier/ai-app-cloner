@@ -4,6 +4,18 @@ All notable changes are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project aims for
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Claude Code plugin packaging.** The `/clone-app` skill is now distributable as a
+  Claude Code plugin (`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` +
+  `skills/clone-app/`). Install it directly with
+  `claude plugin marketplace add Birkenpapier/ai-app-cloner` then
+  `claude plugin install ai-app-cloner@ai-app-cloner`. The plugin skill is generated
+  from the same source of truth (`.claude/skills/clone-app/SKILL.md`) as the per-agent
+  commands, so there is no second copy to keep in sync.
+
 ## [1.1.0] - 2026-07-09
 
 The demos now move. v1.0 proved the clones run; v1.1 shows it.
@@ -54,5 +66,6 @@ reconstructs a working Expo / React Native project that reproduces them.
 - Coverage equals what you screenshot. Data is mocked or on-device; a real backend
   is [v2](ROADMAP.md).
 
+[Unreleased]: https://github.com/Birkenpapier/ai-app-cloner/compare/v1.1.0...HEAD
 [1.1.0]: https://github.com/Birkenpapier/ai-app-cloner/releases/tag/v1.1.0
 [1.0.0]: https://github.com/Birkenpapier/ai-app-cloner/releases/tag/v1.0.0

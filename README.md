@@ -145,6 +145,21 @@ Claude Code is the only one verified end to end so far. The rest use each agent'
 documented config format, generated from the same source. Reports from other agents
 are welcome.
 
+## Install as a Claude Code plugin
+
+Rather than cloning the repo to get the skill, you can install `/clone-app` as a
+Claude Code plugin and have it available in any project:
+
+```bash
+claude plugin marketplace add Birkenpapier/ai-app-cloner
+claude plugin install ai-app-cloner@ai-app-cloner
+```
+
+`/clone-app` is then available everywhere. One thing to keep in mind: the skill builds
+into an Expo / React Native scaffold, so run it inside a clone of this repo (the blank
+canvas it fills in) or an existing Expo project. The skill's pre-flight checks for the
+scaffold and tells you if it is missing.
+
 ## Where the output goes
 
 The repo you clone is a blank Expo app. Running `/clone-app` fills it in:

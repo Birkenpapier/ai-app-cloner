@@ -53,6 +53,9 @@ const noArgs = (text) => text.replace(/\$ARGUMENTS/g, ARG);
 console.log('Syncing clone-app skill to all platforms...');
 console.log('  Source: .claude/skills/clone-app/SKILL.md\n');
 
+// 0. Claude Code plugin — verbatim skill copy distributed via the marketplace (skills/<name>/SKILL.md)
+write('skills/clone-app/SKILL.md', raw);
+
 // 1. Codex CLI — same SKILL.md format, same $ARGUMENTS syntax
 write('.codex/skills/clone-app/SKILL.md', raw);
 
@@ -106,4 +109,4 @@ write(
   ) + '\n'
 );
 
-console.log('\nDone. 9 platform command files generated from the source skill.');
+console.log('\nDone. Generated the Claude Code plugin skill + 9 platform command files from the source skill.');

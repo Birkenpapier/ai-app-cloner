@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ai-app-cloner",
+  "description": "Screenshots to a working Expo / React Native app. A Claude Code skill by Birkenpapier.",
+  "owner": {
+    "name": "Kevin Peivareh",
+    "url": "https://github.com/Birkenpapier"
+  },
+  "plugins": [
+    {
+      "name": "ai-app-cloner",
+      "source": ".",
+      "description": "Turn a folder of app screenshots into a working Expo / React Native clone via a render, screenshot, diff, fix loop. Six demo clones with real on-device persistence.",
+      "category": "development",
+      "homepage": "https://github.com/Birkenpapier/ai-app-cloner"
+    }
+  ]
+}
