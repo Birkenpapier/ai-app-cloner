@@ -30,7 +30,7 @@ export async function writeCollection<T>(key: string, items: T[]): Promise<void>
 
 type WithId = { id: string };
 
-class Collection<T extends WithId> {
+export class Collection<T extends WithId> {
   items: T[];
   ready = false;
   private listeners = new Set<() => void>();
@@ -85,7 +85,13 @@ class Collection<T extends WithId> {
 
 const collections = new Map<string, Collection<WithId>>();
 
-function getCollection<T extends WithId>(key: string, seed: T[]): Collection<T> {
+/**
+ * Access the module-level Collection instance for a key. The v2 backend
+ * Repository writes through THIS same instance (its add/update/remove) so a
+ * tRPC-caller write re-emits to every screen that subscribes via useCollection.
+ * Reading/writing storage directly would persist but not re-render.
+ */
+export function getCollection<T extends WithId>(key: string, seed: T[]): Collection<T> {
   let c = collections.get(key);
   if (!c) {
     c = new Collection<T>(key, seed) as unknown as Collection<WithId>;

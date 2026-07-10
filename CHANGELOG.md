@@ -8,6 +8,18 @@ All notable changes are documented here. The format follows
 
 ### Added
 
+- **v2.0 backend mode (engine, `--backend=mock`).** The app-spec IR gains an optional
+  `dataModel` section (entities, fields, types, enums, FK hints), and a pure-Node
+  generator (`npm run gen:backend`) turns it into a typed local backend under
+  `src/backend/generated/`: a Drizzle schema (types + column metadata), drizzle-zod
+  validators, in-process tRPC CRUD routers, a repository over the on-device store, and
+  typed `use<Table>()` hooks. No SQL engine runs on web — Drizzle is the type source of
+  truth, persistence is the existing AsyncStorage store behind a swappable `Repository`
+  seam, and the router is called in-process (no server). The example Notes model passes
+  `npm run verify` end to end (create via the tRPC API renders and persists across a
+  reload). Ships behind an opt-in flag; a default `/clone-app` run is unchanged. The
+  inferred schema is presented as a reviewable proposal, and FK recovery is emitted as
+  nullable hint columns, never database foreign keys.
 - **Claude Code plugin packaging.** The `/clone-app` skill is now distributable as a
   Claude Code plugin (`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` +
   `skills/clone-app/`). Install it directly with

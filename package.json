@@ -5,6 +5,9 @@
   "dependencies": {
     "@expo/ui": "~56.0.18",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@trpc/server": "11.18.0",
+    "drizzle-orm": "0.45.2",
+    "drizzle-zod": "0.8.3",
     "expo": "~56.0.12",
     "expo-constants": "~56.0.18",
     "expo-device": "~56.0.4",
@@ -29,7 +32,8 @@
     "react-native-screens": "4.25.2",
     "react-native-svg": "15.15.4",
     "react-native-web": "~0.21.0",
-    "react-native-worklets": "0.8.3"
+    "react-native-worklets": "0.8.3",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
@@ -43,7 +47,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "verify": "expo export --platform web && node e2e/verify.mjs"
+    "verify": "expo export --platform web && node e2e/verify.mjs",
+    "gen:backend": "node scripts/gen-backend.mjs"
   },
   "repository": {
     "type": "git",

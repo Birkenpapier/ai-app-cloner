@@ -43,6 +43,13 @@ Shipped in **two tiers** so there's a win early and a real backend later.
 
 ### v2.0 — Mock backend (typed, local, offline) — the fast win
 
+> **Status: engine built and proven end-to-end** (branch `feat/v2-backend`). The IR
+> now carries a `dataModel`; `npm run gen:backend` emits a Drizzle schema +
+> drizzle-zod validators + in-process tRPC routers + typed hooks over the on-device
+> store; and the example (a Notes app) passes `npm run verify` — create through the
+> tRPC API renders and survives a reload. Still to do: wire it into more demo clones
+> and add the `/clone-app --backend=mock` inference pass on real screenshots.
+
 Generate a real API surface with local persistence. No cloud, no auth, runs offline.
 
 - Infer entities + fields + types + relations from the screens.

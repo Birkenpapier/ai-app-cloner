@@ -25,4 +25,24 @@
 
 export const routes = ['/'];
 
-export const flows = [];
+// v2.0 backend-mode round-trip: seed renders -> create through the in-process tRPC
+// API re-renders the list (proves the typed API path + store reactivity) -> the new
+// row survives a reload (proves on-device persistence). This is the flow that proves
+// the generated backend actually executes in the web build.
+export const flows = [
+  {
+    name: 'create a note via the tRPC API -> renders + persists across reload',
+    run: async (page, base) => {
+      await page.goto(base + '/', { waitUntil: 'networkidle' });
+      // seed hydrates from the on-device store (async), so wait for it rather than a fixed delay
+      await page.getByText('Welcome').waitFor({ timeout: 8000 });
+      await page.getByPlaceholder('New note title').fill('Buy milk');
+      await page.getByLabel('Add note').click();
+      // tRPC create -> storeRepository write -> useSyncExternalStore re-render
+      await page.getByText('Buy milk').waitFor({ timeout: 8000 });
+      // survives a full reload (on-device persistence)
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.getByText('Buy milk').waitFor({ timeout: 8000 });
+    },
+  },
+];

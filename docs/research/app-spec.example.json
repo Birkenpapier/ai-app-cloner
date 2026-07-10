@@ -62,5 +62,49 @@
       "transitionsTo": [],
       "spec": "docs/research/components/settings.spec.md"
     }
-  ]
+  ],
+  "dataModel": {
+    "generatedBy": "two-pass-inference",
+    "confidence": "proposal",
+    "notes": "Inferred from the Notes UI. Every field type and the folderId relation are proposals to review, not facts. No business logic, auth, or hidden tables are recoverable from screenshots.",
+    "entities": [
+      {
+        "name": "Folder",
+        "table": "folders",
+        "sourceScreens": ["Home"],
+        "confidence": "medium",
+        "fields": [
+          { "name": "id", "type": "id" },
+          { "name": "name", "type": "text", "evidence": "folder chips in the Home header" },
+          { "name": "createdAt", "type": "timestamp", "optional": true }
+        ],
+        "sampleRows": [
+          { "id": "f1", "name": "Personal", "createdAt": 1720000000000 },
+          { "id": "f2", "name": "Work", "createdAt": 1720000100000 }
+        ]
+      },
+      {
+        "name": "Note",
+        "table": "notes",
+        "sourceScreens": ["Home", "NoteDetail"],
+        "confidence": "high",
+        "fields": [
+          { "name": "id", "type": "id" },
+          { "name": "title", "type": "text", "evidence": "note card title" },
+          { "name": "body", "type": "text", "optional": true, "evidence": "note detail body" },
+          { "name": "pinned", "type": "boolean", "evidence": "pin icon on cards" },
+          { "name": "color", "type": "enum", "enumValues": ["default", "yellow", "green"], "evidence": "card background swatches" },
+          { "name": "createdAt", "type": "timestamp", "optional": true }
+        ],
+        "relations": [
+          { "field": "folderId", "references": "folders", "kind": "belongsTo", "confidence": "hint", "evidence": "Home list filtered by folder chips" }
+        ],
+        "sampleRows": [
+          { "id": "n1", "title": "Welcome", "body": "Your first note.", "pinned": true, "color": "yellow", "folderId": "f1", "createdAt": 1720000200000 },
+          { "id": "n2", "title": "Groceries", "body": "Milk, eggs, bread.", "pinned": false, "color": "green", "folderId": "f1", "createdAt": 1720000300000 },
+          { "id": "n3", "title": "Standup notes", "body": null, "pinned": false, "color": "default", "folderId": "f2", "createdAt": 1720000400000 }
+        ]
+      }
+    ]
+  }
 }
