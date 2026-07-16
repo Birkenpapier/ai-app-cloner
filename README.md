@@ -215,6 +215,39 @@ Each `demo/*` branch (`demo/discord`, `demo/meistertask`, `demo/mindmeister`,
 `demo/todoist`, `demo/keep`, `demo/spendee`) holds one complete clone. They exist to
 demonstrate the tool, not to be shipped. See [Legal and ethics](#legal-and-ethics).
 
+## Backend mode (v2.0)
+
+The screenshots already imply a data model if you read them structurally: a list is a table,
+the fields on a card are its columns, and a row that opens a detail view is a foreign-key hint.
+Backend mode reads that model out of the same screenshots and generates a typed data layer for
+the clone. It is opt-in. A default `/clone-app` run is unchanged; you turn it on with
+`/clone-app --backend=mock`.
+
+The IR (`app-spec.json`) gains an optional `dataModel` section (entities, fields, types, enums,
+FK hints), and a pure-Node generator turns it into a local backend under `src/backend/generated/`:
+
+```bash
+npm run gen:backend
+```
+
+You get a **Drizzle schema** (the type source of truth), **drizzle-zod** validators,
+**in-process tRPC CRUD routers** (called in-process, no HTTP), a **Repository** seam over the
+existing on-device AsyncStorage store (that is the persistence), and typed `use<Table>()` hooks.
+Be clear on what this tier is: it is typed, local, and offline. There is no server process, no
+network, and no auth here.
+
+Proof that it round-trips: the shipped Notes example on `main` passes `npm run verify`, it creates
+a row through the tRPC API, renders it, and the row survives a reload. It also holds up on a real
+app. Branch `demo/meistertask-backend` carries a 7-entity model reverse-engineered from
+MeisterTask's App Store screenshots, verify-green at 9/9 flows, including posting a comment through
+the generated tRPC API.
+
+The honest ceiling: expect roughly **60-80%** of the schema. The inferred model is a reviewable
+proposal, not ground truth. Recovered relations are emitted as nullable hint columns, never real
+database foreign keys, and the completion report names every guess and every gap. Real Postgres on
+Supabase, Supabase Auth, and starter Row-Level Security are the next tier, **v2.1**, which is not
+shipped yet. See [ROADMAP.md](ROADMAP.md).
+
 ## Two modes
 
 | Mode | Input | Fidelity | Notes |
@@ -236,7 +269,8 @@ not a new pipeline. Full detail in [ROADMAP.md](ROADMAP.md).
 | --- | --- | --- | --- |
 | **v1** | screenshots of an app | Expo / React Native (data mocked on device) | ✅ shipping now |
 | **v1** | a web app URL | Expo / React Native | ✅ bonus mode |
-| **v2** | screenshots of an app | a full-stack app: an inferred schema + a typed CRUD backend | 🔜 next |
+| **v2.0** | screenshots of an app | a typed local + offline data layer + API (Drizzle + tRPC), inferred from the screens | ✅ shipping now |
+| **v2.1** | screenshots of an app | the same schema on real Postgres (Supabase) with auth + starter RLS | 🔜 next |
 | **v3** | screenshots of an app | native SwiftUI and Jetpack Compose | 🧭 planned |
 
 **Backend before native.** A running backend is the bigger unlock, and it is
@@ -257,9 +291,11 @@ from. Every limitation is real and stated on purpose, paired with what closes it
   *(Web mode downloads the real assets.)*
 - **Coverage equals what you capture** → a screen or state you never screenshotted can't
   be cloned, so the completion report lists exactly what wasn't covered.
-- **No backend in v1** → data is real but on-device and **persists across reloads**; every
-  server call is a typed stub marked `// TODO: wire backend`. Inferring a real backend is
-  [v2](ROADMAP.md).
+- **The default run has no backend** → data is real but on-device and **persists across reloads**;
+  every server call is a typed stub marked `// TODO: wire backend`. v2.0 adds an opt-in
+  [backend mode](#backend-mode-v20) that generates a typed local data layer from the screens
+  (`/clone-app --backend=mock`); a real Postgres backend on Supabase with auth and RLS is the
+  next tier, [v2.1](ROADMAP.md).
 
 ## Legal and ethics
 

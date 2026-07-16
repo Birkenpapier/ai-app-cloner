@@ -1,6 +1,6 @@
 {
   "name": "ai-app-cloner",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Turn a folder of app screenshots into a working Expo / React Native clone. Clusters screenshots into screens and states, infers the navigation graph, extracts design tokens, then runs a render, screenshot, diff, fix loop until the clone matches the originals. Ships six demo clones (Discord, MeisterTask, MindMeister, Todoist, Keep, Spendee) with real on-device persistence. Screenshot mode works on any iOS or Android app; a web-app-to-React-Native mode reads exact values from the DOM.",
   "author": {
     "name": "Kevin Peivareh",

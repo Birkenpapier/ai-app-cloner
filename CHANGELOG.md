@@ -4,7 +4,10 @@ All notable changes are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project aims for
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [2.0.0] - 2026-07-16
+
+Screenshots imply a backend, not just a UI. v2.0 infers a typed local data layer
+from the same pixels, and the skill now installs as a Claude Code plugin.
 
 ### Added
 
@@ -78,6 +81,7 @@ reconstructs a working Expo / React Native project that reproduces them.
 - Coverage equals what you screenshot. Data is mocked or on-device; a real backend
   is [v2](ROADMAP.md).
 
-[Unreleased]: https://github.com/Birkenpapier/ai-app-cloner/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/Birkenpapier/ai-app-cloner/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/Birkenpapier/ai-app-cloner/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/Birkenpapier/ai-app-cloner/releases/tag/v1.1.0
 [1.0.0]: https://github.com/Birkenpapier/ai-app-cloner/releases/tag/v1.0.0

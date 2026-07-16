@@ -30,10 +30,10 @@ The one gap v1 leaves on purpose: **data is mocked on-device.** That's what v2 f
 
 ---
 
-## 🔜 v2 — Full-stack mode: infer a backend from the screenshots
+## 🚧 v2 — A real backend from the screenshots (v2.0 shipped, v2.1 next)
 
-> The pitch: **the only tool that turns screenshots into a running full-stack app,
-> not just a UI.** A clone whose data survives, syncs, and is real.
+> The pitch: **screenshots into a running app with a real data layer, not just a UI.**
+> Its data survives and is real now, and syncs across devices once it moves to Supabase (v2.1).
 
 The screenshots already show the data model if you look: a list of tasks *is* a
 `tasks` table; a card's fields *are* columns; a row opening a detail *is* a foreign
@@ -43,18 +43,20 @@ Shipped in **two tiers** so there's a win early and a real backend later.
 
 ### v2.0 — Mock backend (typed, local, offline) — the fast win
 
-> **Status: engine built and proven end-to-end** (branch `feat/v2-backend`). The IR
-> now carries a `dataModel`; `npm run gen:backend` emits a Drizzle schema +
-> drizzle-zod validators + in-process tRPC routers + typed hooks over the on-device
-> store; and the example (a Notes app) passes `npm run verify` — create through the
-> tRPC API renders and survives a reload. Still to do: wire it into more demo clones
-> and add the `/clone-app --backend=mock` inference pass on real screenshots.
+> **Status: shipped in v2.0.0.** The IR carries a `dataModel`; `/clone-app --backend=mock`
+> runs the inference and `npm run gen:backend` emits a Drizzle schema + drizzle-zod
+> validators + in-process tRPC routers + typed hooks over the on-device store. The shipped
+> Notes example passes `npm run verify` (create through the tRPC API renders and survives a
+> reload), and the same engine is proven on a real 7-entity model reverse-engineered from
+> MeisterTask's App Store screenshots (branch `demo/meistertask-backend`, 9/9 flows green,
+> including a comment posted through the generated tRPC API).
 
 Generate a real API surface with local persistence. No cloud, no auth, runs offline.
 
 - Infer entities + fields + types + relations from the screens.
 - Emit a **Drizzle schema** → **drizzle-zod** validators.
-- Generate a **typed API layer** (tRPC routers) backed by **SQLite / in-memory**.
+- Generate a **typed API layer** (tRPC routers) over the on-device AsyncStorage store behind
+  a swappable **Repository** seam (no SQL engine runs; Drizzle is the type source of truth).
 - Rewire the UI's `// TODO: wire backend` stubs to call the generated client.
 - Verify: seed → API round-trip → UI reads it back → persists across reload.
 
